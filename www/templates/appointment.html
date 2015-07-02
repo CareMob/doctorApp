@@ -1,0 +1,55 @@
+<ion-view view-title="Consulta">
+  <ion-content>
+    <!--h1>Criar form Consulta</h1-->
+
+	<div class="list list-inset">
+		
+		<!-- Populado por autocomplete e terá um modal com campo Search... -->
+		<label class="item item-input item-stacked-label ">	    
+			<span class="input-label">Especilidade Médica</span>		     
+		    <input type="text" placeholder=" ex: Pisiquiatria">
+		</label>
+
+		<!-- Populado por autocomplete .. -->
+		<label class="item item-input item-stacked-label ">	    
+			<span class="input-label">Localidade</span>		     
+		    <input type="text" placeholder=" ex: Caxias do Sul">
+		</label>
+
+		<div class="spacer" style="width: 300px; height: 41px;"></div>
+
+		<!-- Populado por autocomplete e terá um modal com campo Search... -->
+		<label class="item item-input item-stacked-label">	    			
+			<span class="input-label">Médico (Opcional)</span>
+			<input type="text" placeholder="Aloisio Fontana (opcional)">
+		</label>
+								
+		<label class="item item-input">
+			<span class="input-label">Periodo</span>
+			<input type="month">
+			<input type="month">
+		</label>
+		
+		<label class="item item-input  item-select">
+		    <div class="input-label" width="10em">
+		      Convênio
+		    </div>
+		    <select>
+		      <option>Unimed</option>
+		      <option selected>Circulo</option>
+		      <option>IPAM</option>
+		      <option>Fatíma</option>
+		    </select>
+		</label>
+		<!-- Ao clitar trazer os horarios em um modal.. -->
+		<button class="button button-block button-calm">
+  			Verificar Horários
+		</button>
+		<div class="button-bar">		  
+		  <a class="button button-calm">Agendar</a>
+		  <a class="button button-assertive">Cancelar</a>
+		</div>
+
+	</div>
+  </ion-content>
+</ion-view>
