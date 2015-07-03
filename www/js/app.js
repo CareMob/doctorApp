@@ -47,7 +47,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ui.bootstrap'])
     url: "/appointment",
     views: {
       'menuContent': {
-        templateUrl: "templates/appointment.html"
+        templateUrl: "templates/appointment.html",
+        controller: 'AppointmentCtrl'
       }
     }
   })

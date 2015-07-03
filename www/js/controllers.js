@@ -65,35 +65,82 @@ angular.module('starter.controllers', [])
   // chamada banco
 
     $scope.schedules = [
-     {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/08/2015' , hour: '14:30', id: 1 },  
-     {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 03/08/2015' , hour: '14:30', id: 2 },
-     {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 03/08/2015' , hour: '14:30', id: 3}  
+       {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/08/2015' , hour: '14:30', id: 1 },  
+       {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 03/08/2015' , hour: '14:30', id: 2 },
+       {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 03/08/2015' , hour: '14:30', id: 3}  
     ];
 
 })
 
 
-.controller('AppointmentCtrl', function($scope, $stateParams) {
+.controller('AppointmentCtrl', function($scope, $ionicModal) {
+
+  // Form data for the Appointments
+  $scope.loginData = {};
+
+// Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/doctorsZoom.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  // Triggered in the login modal to close it
+  $scope.closeZoom = function() {
+    $scope.modal.hide();
+  };
+
+  // Open the login modal
+  $scope.doctorZoom = function() {
+    $scope.modal.show();
+  };
 
 })
 
 
 //Typeahead  Controller para autocomplete na busca dos Medicos
-.controller('DoctorsSearchCtrl', function($scope) {
+.controller('DoctorsCtrl', function($scope) {
+
+  
+
+/* -- Function para trazer os medicos no filtro de busca doctorZoom.htl-- 
+$scope.doctorsSearchZoom = function(){*/
 
   //$scope.selected = undefined;
-  $scope.doctors = [{display: 'Rodolfo Pipe Variani Mussato'}, 
-                    {display: 'Mauricio Faoro'}, 
-                    {display: 'Marcelo Menegat'}, 
-                    {display: 'Ethel Simoni'}, 
-                    {display: 'Jaine Marin'}, 
-                    {display: 'Rafael Stoffels'}, 
-                    {display: 'Edson Barros'}
+  $scope.doctors = [{id: '345', name: 'Fabiana Aver Pires', epeciality: 'Ginecologista', infos: '54 32022522 - Rua os 18 do forte 2000 sala 206'}, 
+                    {id: '543', name: 'Katia Tomaschewski Moitta', epeciality: 'Ginecologista', infos: '5430274090 - 5432144094 Rua Feijo Junior, 921AD (Sao Pelegrino)'}, 
+                    {id: '134', name: 'Tirso Luchese Galvan', epeciality: 'Ginecologista', infos: '5432212901 - Av. Júlio de Castilhos, 2101 - 78 (Centro)'}, 
+                    {id: '321', name: 'Kenia Fogaça da Silveira', epeciality: 'Psiquiatria', infos: '5430390191 - Rua Pinheiro Machado, 2076 sala 304 (Centro)'}, 
+                    {id: '214', name: 'Leonardo Prates de Lima', epeciality: 'Psiquiatria', infos: '5432029000 - Rua Moreira César, 2400' }, 
+                    {id: '352', name: 'Aurea dos Santos Celli', epeciality: 'Pediatra',  infos: '5430277787 - R Garibaldi, 680 - Sl. 101 (Centro)'}, 
+                    {id: '216', name: 'Alvaro Jose Castilhos', epeciality: 'Geriatra', infos: '5432214398 Garibaldi, 789 (Exposicao)'}
                    ];
-  $scope.onSelect = function (item) {
-            console.log('item', item);
-        }
-})
+//}
+
+
+
+
+/*
+Cristina Worm Weber
+Alergista - 5430272929/5432239909 Rua Ernesto Alves, 1887 - sala 602 (Centro)
+
+Dagoberto Vanoni de Godoy
+Pneumologista - 5432284882 - Rua Arcy Rocha Nóbrega, 401 S 201
+
+Deize de Zorzi Piccoli
+Gastroenterologista - 5432212122 - R Moreira Cesar, 2821 - Sl. 31 (Sao Pelegrino)
+
+Eduardo Gomes De Andrade
+Quiropraxista - 5432194059 - Rua General Arcy da Rocha Nóbrega, 401 (Madureira)
+
+Roberto Antonio Conte
+Oftalmologista - 5432282133 - Os Dezoito do Forte, 1098 - Térreo (Sao Pelegrino)
+
+*/
+
+
+
+}) //End doctorsCtrl
 
 .controller('hisotryCtrl', function($scope){
 
