@@ -103,7 +103,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'ui.bootstrap'])
         controller: 'PlaylistCtrl'
       }
     }
+  })
+
+   .state('app.signin', {
+    url: "/signin",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/signin.html",
+        controller: 'SigninCtrl'
+      }
+    }
   });
+
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/schedules');
 });

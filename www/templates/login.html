@@ -16,13 +16,10 @@
           <span class="input-label">Senha</span>
           <input type="password" ng-model="loginData.password">
         </label>
-        <label class="item">
-          <button class="button button-block button-calm" type="submit">Fazer Login</button>
-          <button class="button button-block button-calm" type="submit">Cadastre-se</button>
-          <button class="button button-block button-assertive" type="submit">Esqueci minha senha</button>
-        </label>
-        
-      </div>
+        <button class="button button-block button-calm" type="submit">Fazer Login</button>
+        <button class="button button-block button-calm"  type="button"  ng-click="goToSignIn()">Cadastre-se</button>
+        <button class="button button-block button-assertive" type="submit">Esqueci minha senha</button>
+       </div>
     </form>
   </ion-content>
 </ion-view>
