@@ -65,10 +65,10 @@ $scope.goToSignIn = function() {
 
 })
 
-<<<<<<< HEAD
+
 .controller('SchedulesCtrl', function($scope) {
   // chamada banco
-=======
+
 .controller('SigninCtrl', function($scope, $stateParams) {
 
 })
@@ -94,7 +94,7 @@ $scope.goToSignIn = function() {
 
    // chamada banco
 
->>>>>>> origin/master
+
     $scope.schedules = [
        {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/07/2015' , hour: '14:30', id: 1 },  
        {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 10/08/2015' , hour: '14:30', id: 2 },
