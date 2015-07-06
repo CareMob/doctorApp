@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $state) {
   
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -30,10 +30,16 @@ angular.module('starter.controllers', [])
     $scope.modal.show();
   };
 
+$scope.goToSignIn = function() {
+    $scope.closeLogin();
+    $state.go('app.signin'); 
+  };  
+
+
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
-    
 
+  
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
@@ -59,12 +65,40 @@ angular.module('starter.controllers', [])
 
 })
 
+<<<<<<< HEAD
 .controller('SchedulesCtrl', function($scope) {
   // chamada banco
+=======
+.controller('SigninCtrl', function($scope, $stateParams) {
+
+})
+
+
+
+.controller('SchedulesCtrl', function($scope) {
+
+   
+   $scope.setHidden = function(type, value){
+    currentDate = new Date();
+    appointmentDate = new Date(value);
+    returnvisible = true;
+    
+    if ( (appointmentDate < currentDate) && (type == "past")){
+        returnvisible = false; }
+
+    if ( (appointmentDate > currentDate) && (type == "future")){
+        returnvisible = false; }    
+
+    return returnvisible; 
+  }
+
+   // chamada banco
+
+>>>>>>> origin/master
     $scope.schedules = [
-       {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/08/2015' , hour: '14:30', id: 1 },  
-       {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 03/08/2015' , hour: '14:30', id: 2 },
-       {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 03/08/2015' , hour: '14:30', id: 3}  
+       {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/07/2015' , hour: '14:30', id: 1 },  
+       {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 10/08/2015' , hour: '14:30', id: 2 },
+       {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 08/08/2015' , hour: '14:30', id: 3}  
     ];
 })
 

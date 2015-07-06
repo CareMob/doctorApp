@@ -1,7 +1,7 @@
 <ion-view view-title="Meus Horários">
 	<ion-content>
     	<ion-list>
-     		<ion-item ng-repeat="appointment in schedules" href="#/app/appointment/{{appointment.id}}">
+     		<ion-item ng-repeat="appointment in schedules">
 
      		<p>
 	     		<span>Espec: </span>
@@ -14,6 +14,10 @@
 			<p>
 	     		<span> {{appointment.date}} às {{appointment.hour}} horas </span>
 			</p>
+
+			<button class="button button-assertive"  ng-hide="setHidden('past', appointment.date)" type="button">Consulta nao realizada</button>
+            <button class="button button-calm"       ng-hide="setHidden('past', appointment.date)" type="button">Avaliar Médico</button>
+            <button class="button button-assertive"  ng-hide="setHidden('future', appointment.date)"  type="button">Cancelar Consulta</button>
 
       		</ion-item>
     	</ion-list>
