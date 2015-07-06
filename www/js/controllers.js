@@ -73,13 +73,27 @@ $scope.goToSignIn = function() {
 
 .controller('SchedulesCtrl', function($scope) {
 
+   
+   $scope.setHidden = function(type, value){
+    currentDate = new Date();
+    appointmentDate = new Date(value);
+    returnvisible = true;
+    
+    if ( (appointmentDate < currentDate) && (type == "past")){
+        returnvisible = false; }
 
-  // chamada banco
+    if ( (appointmentDate > currentDate) && (type == "future")){
+        returnvisible = false; }    
+
+    return returnvisible; 
+  }
+
+   // chamada banco
 
     $scope.schedules = [
-       {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/08/2015' , hour: '14:30', id: 1 },  
-       {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 03/08/2015' , hour: '14:30', id: 2 },
-       {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 03/08/2015' , hour: '14:30', id: 3}  
+       {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/07/2015' , hour: '14:30', id: 1 },  
+       {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 10/08/2015' , hour: '14:30', id: 2 },
+       {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 08/08/2015' , hour: '14:30', id: 3}  
     ];
 
 })
