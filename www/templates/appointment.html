@@ -7,7 +7,7 @@
 		<!-- Populado por autocomplete e terá um modal com campo Search... -->
 		<label class="item item-input item-stacked-label ">	    
 			<span class="input-label">Especilidade Médica</span>		     
-		    <input type="text" placeholder=" ex: Pisiquiatria">
+		    <input type="text" placeholder=" ex: Pisiquiatria" ng-dblclick="specialtyZoom()">
 		</label>
 
 		<!-- Populado por autocomplete .. -->
@@ -18,11 +18,20 @@
 
 		<div class="spacer" style="width: 300px; height: 41px;"></div>
 
-		<!-- Populado por autocomplete e terá um modal com campo Search... -->
+		<!-- Populado por autocomplete e terá um modal com campo Search...ng-dblclick -->
 		<label class="item item-input item-stacked-label">	    			
 			<span class="input-label">Médico (Opcional)</span>
-			<input type="text" placeholder="Aloisio Silva (opcional)" ng-dblclick="doctorZoom()">
+			<input type="text" ng-model="data.doctor" placeholder="Aloisio Silva (opcional)" ng-click="doctorZoom()">
 		</label>
+		<!--div class="item item-input-inset">
+		<span class="input-label">Médico (Opcional)</span>
+			<label class="item-input-wrapper">
+				<input type="text" ng-model="data.doctor" placeholder="Aloisio Silva (opcional)" ng-dblclick="doctorZoom()">
+			</label>
+			<button class="button button-small" ng-click="doctorZoom()">
+				Procurar
+			</button>
+		</div-->
 								
 		<label class="item item-input">
 			<span class="input-label">Periodo</span>
@@ -44,11 +53,7 @@
 		<!-- Ao clitar trazer os horarios em um modal.. -->
 		<button class="button button-block button-calm">
   			Verificar Horários
-		</button>
-		<div class="button-bar">		  
-		  <a class="button button-calm">Agendar</a>
-		  <a class="button button-assertive">Cancelar</a>
-		</div>
+		</button>		
 
 	</div>
   </ion-content>

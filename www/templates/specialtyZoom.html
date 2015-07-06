@@ -1,0 +1,21 @@
+<ion-view ng-controller="specialtySearchZoom">  
+  <ion-header-bar>
+     <h1 class="title">Busca Especialidades</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeZoom()">Close</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <label class="item item-input">
+      <i class="icon ion-search placeholder-icon"></i>
+      <input type="search" ng-model="searchText" placeholder="Filtrar...">
+    </label>
+    <ion-list id="searchTextResults">
+      <ion-item ng-dblclick="" ng-repeat="specialty in specialtys | filter:searchText" >
+          <p>              
+            <span> {{specialty.description}} </span>             
+          </p>    
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
