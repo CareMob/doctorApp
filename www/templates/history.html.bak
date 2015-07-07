@@ -1,0 +1,28 @@
+<ion-view view-title="Histórico">
+  <ion-content>
+    	<ion-list>
+     		<ion-item ng-repeat="solicitation in history" >
+
+     		<p>
+	     		<span><b>Espec: </b></span>
+	       	 	<span> {{solicitation.epeciality}} </span>
+			</p>
+			<p>
+	     		<span><b>Médico: </b></span>
+	       	 	<span> {{solicitation.doctor}} </span>
+			</p>
+			<p>
+	     		<span> {{solicitation.date}} às {{solicitation.hour}} horas </span>
+			</p>
+			<p>
+	     		<span><b>Status: </b></span>
+	       	 	<span> {{solicitation.status}} </span>
+	       	 	{{setRate(solicitation.score)}}
+     	 	    <span  ng-hide="setHidden(solicitation.status)"> <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="null" on-leave="overStar = null"></rating> </span>
+     	 	    {{setVisible(solicitation.status)}}
+			</p>
+
+      		</ion-item>
+    	</ion-list>
+   	</ion-content>
+ </ion-view>

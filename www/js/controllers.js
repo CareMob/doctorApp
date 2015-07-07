@@ -65,10 +65,6 @@ $scope.goToSignIn = function() {
 
 })
 
-
-.controller('SchedulesCtrl', function($scope) {
-  // chamada banco
-
 .controller('SigninCtrl', function($scope, $stateParams) {
 
 })
@@ -94,39 +90,15 @@ $scope.goToSignIn = function() {
 
    // chamada banco
 
-
     $scope.schedules = [
        {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/07/2015' , hour: '14:30', id: 1 },  
        {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 10/08/2015' , hour: '14:30', id: 2 },
        {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 08/08/2015' , hour: '14:30', id: 3}  
     ];
+
 })
 
-/*
-.controller('AppointmentCtrl', function($scope, $ionicModal, Data) {
 
-  $scope.data = Data;
-
-  // Form data for the Appointments
-  $scope.loginData = {};
-
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/doctorsZoom.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.modal = modal;
-  });
-
-  // Triggered in the login modal to close it
-  $scope.closeZoom = function() {
-    $scope.modal.hide();
-  };
-
-  // Open the login modal
-  $scope.doctorZoom = function() {
-    $scope.modal.show();
-  };
-})*/
 
 
 

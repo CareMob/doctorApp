@@ -9,8 +9,7 @@ doctorsCtrl.controller('doctorsSearchZoom', function($scope, Data){
 	$scope.data = Data;
 
 	// -- Function para trazer os medicos no filtro de busca doctorZoom.htl-- 
-	$scope.doctors = [{id: '000', name: '', specialty: '', infos: ''},
-                     {id: '345', name: 'Fabiana Aver Pires', specialty: 'Ginecologista', infos: '54 32022522 - Rua os 18 do forte 2000 sala 206'}, 
+	$scope.doctors = [{id: '345', name: 'Fabiana Aver Pires', specialty: 'Ginecologista', infos: '54 32022522 - Rua os 18 do forte 2000 sala 206'}, 
                      {id: '543', name: 'Katia Tomaschewski Moitta', specialty: 'Ginecologista', infos: '5430274090 - 5432144094 Rua Feijo Junior, 921AD (Sao Pelegrino)'}, 
                      {id: '134', name: 'Tirso Luchese Galvan', specialty: 'Ginecologista', infos: '5432212901 - Av. Júlio de Castilhos, 2101 - 78 (Centro)'}, 
                      {id: '321', name: 'Kenia Fogaça da Silveira', specialty: 'Psiquiatria', infos: '5430390191 - Rua Pinheiro Machado, 2076 sala 304 (Centro)'}, 
