@@ -1,14 +1,8 @@
 angular.module('starter.controllers', [])
 
+
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $state) {
-  
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-  
+    
   // Form data for the login modal
   $scope.loginData = {};
 
@@ -71,8 +65,70 @@ $scope.goToSignIn = function() {
 
 
 
-.controller('SchedulesCtrl', function($scope) {
+.controller('SchedulesCtrl', function($scope, $ionicPopup) {
 
+  $scope.ratingStates = [
+    {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
+    {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
+    {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
+    {stateOn: 'glyphicon-heart'},
+    {stateOff: 'glyphicon-off'}
+  ];
+
+
+  /*$scope.avaluateDoctor = function() { 
+    var avaluateOperation = $ionicPopup.confirm({
+    /*template: '<input type="password">',
+    title: 'Avaliar Médico',
+    scope: $scope,
+     buttons: [{text: 'Cancel'},
+               {text: 'Save'}]
+    )}
+  }*/
+
+   $scope.avalueteDoctor = function() {
+    var avaluateOperation = $ionicPopup.confirm({
+        title: 'Confirmar Avaliação?',
+        subTitle: 'Atribua a quantiade de estrelas ao médico conforme o atendimento recebido:',
+        template: '<h3><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h3>', 
+        cancelText: 'Cancelar',
+        okText: 'Sim',
+        cancelType: 'button-assertive',
+        okType: 'button-calm'});
+      avaluateOperation.then(function(res) {
+      
+   });
+  };  
+ 
+
+  $scope.appointmentDoNotRealized = function() {
+    var cancelOperation = $ionicPopup.confirm({
+        title: 'Consulta não realizada?',
+        template: 'Ao clicar nesta opção a consulta será marcada como não realizada! Continuar?', 
+        cancelText: 'Não',
+        okText: 'Sim',
+        cancelType: 'button-assertive',
+        okType: 'button-calm'});
+     
+   cancelOperation.then(function(res) {
+      
+   });
+  };  
+
+  $scope.cancelAppointment = function() {
+    var cancelOperation = $ionicPopup.confirm({
+        title: 'Cancelar consulta?',
+        template: 'Ao clicar nesta opção a consulta será cancelada, liberando o horário na agenda do médico para outro paciente! Confirmar Cancelamento?', 
+        cancelText: 'Não',
+        okText: 'Sim',
+        cancelType: 'button-assertive',
+        okType: 'button-calm'});
+     
+   cancelOperation.then(function(res) {
+      
+   });
+  };  
+  
    
    $scope.setHidden = function(type, value){
     currentDate = new Date();
