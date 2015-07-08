@@ -2,7 +2,7 @@
   <ion-header-bar>
      <h1 class="title">Busca Médicos</h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="closeZoom()">Close</button>
+      <button class="button button-clear" ng-click="closeZoom()">Voltar</button>
     </div>
   </ion-header-bar>
   <ion-content>
@@ -14,7 +14,7 @@
     <ion-list id="searchTextResults" >
       
       <ion-item ng-dblclick="" ng-repeat="doctor in doctors | filter:searchText"  class="item item-radio">
-        <label class="item item-radio" ng-click="setDoctorChoice(doctor)"> 
+        <label class="item item-radio" ng-click="setDoctorChoice(doctor); closeZoom('dz');"> 
           <input type="radio" name="group">
             <div class="item-content">
               <p>

@@ -5,7 +5,7 @@ doctorsCtrl.factory('appointmentVO', function(){
 })
 
 
-appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, appointmentVO) {
+appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $state, appointmentVO) {
   
   $scope.appointmentVO = appointmentVO;
 
@@ -30,9 +30,13 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, a
 
 
   // Triggered in the login modal to close it
-  $scope.closeZoom = function() {
-    $scope.docZmodal.hide();
-    $scope.specZmodal.hide();
+  $scope.closeZoom = function(zoomId) {
+    if(zoomId == "dz"){ 
+      $scope.docZmodal.hide();
+      console.log("DoctorZoom CLose");
+    }else{
+      $scope.specZmodal.hide();
+    }
   };
   // Open the doctors modal
   $scope.doctorZoom = function() {    
@@ -53,5 +57,11 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, a
   };
 
 
+  /**
+   Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
+   **/
+  $scope.goToVerify = function() {
+     $state.go('app.setAppointment');   
+  };  
 
 })

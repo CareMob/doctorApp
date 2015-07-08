@@ -105,12 +105,22 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
     }
   })
 
-   .state('app.signin', {
+  .state('app.signin', {
     url: "/signin",
     views: {
       'menuContent': {
         templateUrl: "templates/signin.html",
         controller: 'SigninCtrl'
+      }
+    }
+  })
+
+  .state('app.setAppointment', {
+    url: "/setAppointment",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/setAppointment.html"
+        //controller: 'SigninCtrl'
       }
     }
   });
