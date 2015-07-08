@@ -15,9 +15,10 @@
 	     		<span> {{appointment.date}} às {{appointment.hour}} horas </span>
 			</p>
 
-			<button class="button button-assertive"  ng-hide="setHidden('past', appointment.date)" type="button">Consulta nao realizada</button>
-            <button class="button button-calm"       ng-hide="setHidden('past', appointment.date)" type="button">Avaliar Médico</button>
-            <button class="button button-assertive"  ng-hide="setHidden('future', appointment.date)"  type="button">Cancelar Consulta</button>
+			<button class="button button-assertive"  ng-hide="setHidden('past', appointment.date)" type="button"
+			ng-click="appointmentDoNotRealized()">Consulta nao realizada</button>
+            <button class="button button-calm"       ng-hide="setHidden('past', appointment.date)" type="button" ng-click="avalueteDoctor()" >Avaliar Médico</button>
+            <button class="button button-assertive"  ng-hide="setHidden('future', appointment.date)"  ng-click="cancelAppointment()" type="button">Cancelar Consulta</button>
 
       		</ion-item>
     	</ion-list>
