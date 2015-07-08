@@ -1,6 +1,6 @@
-<ion-view ng-controller="doctorsSearchZoom">  
+<ion-view ng-controller="specialitySearchZoom">  
   <ion-header-bar>
-     <h1 class="title">Busca Médicos</h1>
+     <h1 class="title">Busca Especialidades</h1>
     <div class="buttons">
       <button class="button button-clear" ng-click="closeZoom()">Close</button>
     </div>
@@ -10,24 +10,18 @@
       <i class="icon ion-search placeholder-icon"></i>
       <input type="search" ng-model="searchText" placeholder="Filtrar...">
     </label>
-
-    <ion-list id="searchTextResults" >
-      
-      <ion-item ng-dblclick="" ng-repeat="doctor in doctors | filter:searchText"  class="item item-radio">
-        <label class="item item-radio" ng-click="setDoctorChoice(doctor)"> 
+    <ion-list id="searchTextResults">
+      <ion-item ng-dblclick="" ng-repeat="speciality in specialities | filter:searchText"  class="item item-radio">
+        <label class="item item-radio" ng-click="setSpecChoice(speciality)"> 
           <input type="radio" name="group">
             <div class="item-content">
               <p>
-                <span>Dr(a). </span>
-                <span> {{doctor.name}} {{doctor.speciality}}</span>                           
+                <span> {{speciality.description}} </span>                               
               </p>              
             </div>
             <i class="radio-icon ion-checkmark"></i>
         </label>
-    
       </ion-item>
     </ion-list>
-
-
   </ion-content>
 </ion-view>

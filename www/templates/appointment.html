@@ -7,13 +7,13 @@
 		<!-- Populado por autocomplete e terá um modal com campo Search... -->
 		<label class="item item-input item-stacked-label ">	    
 			<span class="input-label">Especilidade Médica</span>		     
-		    <input type="text" placeholder=" ex: Pisiquiatria" ng-dblclick="specialtyZoom()">
+		    <input type="text" ng-model="appointmentVO.speciality" placeholder=" ex: Psiquiatria" ng-click="specialityZoom()">
 		</label>
 
 		<!-- Populado por autocomplete .. -->
 		<label class="item item-input item-stacked-label ">	    
 			<span class="input-label">Localidade</span>		     
-		    <input type="text" placeholder=" ex: Caxias do Sul">
+		    <input type="text" ng-model="appointmentVO.locate" placeholder=" ex: Caxias do Sul">
 		</label>
 
 		<div class="spacer" style="width: 300px; height: 41px;"></div>
@@ -21,24 +21,17 @@
 		<!-- Populado por autocomplete e terá um modal com campo Search...ng-dblclick -->
 		<label class="item item-input item-stacked-label">	    			
 			<span class="input-label">Médico (Opcional)</span>
-			<input type="text" ng-model="data.doctor" placeholder="Aloisio Silva (opcional)" ng-click="doctorZoom()">
+			<input type="text" ng-model="appointmentVO.doctor" placeholder="Aloisio Silva (opcional)" ng-click="doctorZoom()">
 		</label>
-		<!--div class="item item-input-inset">
-		<span class="input-label">Médico (Opcional)</span>
-			<label class="item-input-wrapper">
-				<input type="text" ng-model="data.doctor" placeholder="Aloisio Silva (opcional)" ng-dblclick="doctorZoom()">
+				
+		<div>
+			<label class="item item-input">				
+				<input id="month-per-ini" type="month">			
 			</label>
-			<button class="button button-small" ng-click="doctorZoom()">
-				Procurar
-			</button>
-		</div-->
-								
-		<label class="item item-input">
-			<span class="input-label">Periodo</span>
-			<input type="month">
-			<input type="month">
-		</label>
-		
+			<label class="item item-input">			
+				<input id="month-per-end" type="month">
+			</label>
+		</div>				
 		<label class="item item-input  item-select">
 		    <div class="input-label" width="10em">
 		      Convênio
