@@ -4,7 +4,8 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'ui.bootstrap'])
+//, 'ui.bootstrap'
+angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'backand'])
 
 
 //angular.module('hisotryCtrl', [])
@@ -23,7 +24,11 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, BackandProvider) {
+
+  BackandProvider.manageDefaultHeaders();
+  BackandProvider.setAnonymousToken('5d753ca9-6560-4376-a196-dfa93298c1b4');
+  //BackandProvider.setSignUpToken('Your SignUp Token');
 
   $stateProvider
   .state('app', {
@@ -73,47 +78,15 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
     }
   })
 
-  /**
-  * 
-  */
-
-  .state('app.search', {
-    url: "/search",
+  /*.state('app.newUser', {
+    url: "/newUser",
     views: {
       'menuContent': {
-        templateUrl: "templates/search.html"
+        templateUrl: "templates/newUser.html",
+        controller: 'AppCtrl'
       }
     }
-  })
-
-  .state('app.browse', {
-    url: "/browse",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/browse.html"
-      }
-    }
-  })
-  
-    .state('app.playlists', {
-      url: "/playlists",
-      views: {
-        'menuContent': {
-          templateUrl: "templates/playlists.html",
-          controller: 'PlaylistsCtrl'
-        }
-      }
-    })
-
-  .state('app.single', {
-    url: "/playlists/:playlistId",
-    views: {
-      'menuContent': {
-        templateUrl: "templates/playlist.html",
-        controller: 'PlaylistCtrl'
-      }
-    }
-  })
+  })*/
 
   .state('app.signin', {
     url: "/signin",
