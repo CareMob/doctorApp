@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 //, 'ui.bootstrap'
-angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'Schedules', 'backand'])
+angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'Schedules', 'backand', 'ui.bootstrap'])
 
 
 //angular.module('hisotryCtrl', [])
@@ -27,7 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
 .config(function($stateProvider, $urlRouterProvider, BackandProvider) {
 
   BackandProvider.manageDefaultHeaders();
-  BackandProvider.setAnonymousToken('5d753ca9-6560-4376-a196-dfa93298c1b4');
+ // BackandProvider.setAnonymousToken('5d753ca9-6560-4376-a196-dfa93298c1b4');
   //BackandProvider.setSignUpToken('Your SignUp Token');
 
   $stateProvider

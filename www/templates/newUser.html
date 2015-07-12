@@ -5,8 +5,8 @@
         </label>
         <label class="item item-input">
           <span class="input-label">Número (DDD + Celular)</span>
-          <input type="text"  id='txtCellphone' placeholder="ex:5491001493">
+          <input type="text"  id='txtCellphone' ng-model="cellphoneNumber"  placeholder="ex:5491001493">
         </label>
-        <button class="button button-block button-calm" type="button" ng-click="validateNumber()">Cadastrar</button>
+        <button class="button button-block button-calm" type="button" ng-click="validateNumber(cellphoneNumber)">Cadastrar</button>
   </ion-content>
 </ion-view>

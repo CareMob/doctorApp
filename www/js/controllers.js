@@ -2,11 +2,13 @@ angular.module('starter.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicPopup, $http) {
 
-  $scope.validateNumber = function() {
+  $scope.cellphoneNumber = '';
+  
+  $scope.validateNumber = function(cellphoneNumber) {
 
     var appID = '098a8991aefd43f08e8ad8b';
-    var appToken = 'b23389d0d504aa1243de6593721a65f4f6bf8adc';
-    var mobile = '+55' + document.getElementById('txtCellphone').value;
+    var appToken = '86bda5c58db34bbf9e560cbf59ecf799a20b1307';
+    var mobile = '+55' + cellphoneNumber;
     var url = 'https://www.cognalys.com/api/v1/otp/?app_id=' + appID
             + '&access_token=' + appToken
             + '&mobile=' + mobile;
