@@ -1,6 +1,5 @@
 angular.module('starter.controllers', [])
 
-
 .controller('AppCtrl', function($scope, $ionicPopup, $http) {
 
   $scope.validateNumber = function() {
@@ -68,27 +67,10 @@ angular.module('starter.controllers', [])
 
  })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
-
-})
-
 .controller('SigninCtrl', function($scope, $stateParams) {
 
 })
-
-
-
+/*
 .controller('SchedulesCtrl', function($scope, $ionicPopup) {
 
   $scope.ratingStates = [
@@ -167,7 +149,7 @@ angular.module('starter.controllers', [])
     ];
 
 })
-
+*/
 
 
 .controller('hisotryCtrl', function($scope){

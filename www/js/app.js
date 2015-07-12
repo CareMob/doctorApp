@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
 //, 'ui.bootstrap'
-angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'backand'])
+angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'Schedules', 'backand'])
 
 
 //angular.module('hisotryCtrl', [])
@@ -78,7 +78,7 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
     }
   })
 
-  /*.state('app.newUser', {
+  .state('app.newUser', {
     url: "/newUser",
     views: {
       'menuContent': {
@@ -86,7 +86,7 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
         controller: 'AppCtrl'
       }
     }
-  })*/
+  })
 
   .state('app.signin', {
     url: "/signin",
