@@ -1,25 +1,15 @@
-<ion-view>
-  <ion-header-bar>
-    <h1 class="title">Doctor APP</h1>
-    <div class="buttons">
-      <button class="button button-clear" ng-click="closeLogin()">Close</button>
-    </div>
-  </ion-header-bar>
+<ion-view view-title="Doctor APP - Login">
   <ion-content>
-    <form ng-submit="doLogin()">
-      <div class="list">
-        <label class="item item-input">
-          <span class="input-label">Celular</span>
+         <label class="item item-input">
+          <span class="input-label">Usuário (DDD+Celular)</span>
           <input type="text" ng-model="loginData.username" placeholder="ex:5491001493">
         </label>
         <label class="item item-input">
           <span class="input-label">Senha</span>
           <input type="password" ng-model="loginData.password">
         </label>
-        <button class="button button-block button-calm" type="submit">Fazer Login</button>
+        <button class="button button-block button-calm" type="button">Fazer Login</button>
         <button class="button button-block button-calm"  type="button"  ng-click="goToSignIn()">Cadastre-se</button>
-        <button class="button button-block button-assertive" type="submit">Esqueci minha senha</button>
-       </div>
-    </form>
+        <button class="button button-block button-assertive" type="button">Esqueci minha senha</button>
   </ion-content>
 </ion-view>

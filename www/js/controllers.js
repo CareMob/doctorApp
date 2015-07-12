@@ -1,48 +1,17 @@
 angular.module('starter.controllers', [])
 
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $state) {
-    
-  // Form data for the login modal
-  $scope.loginData = {};
+.controller('AppCtrl', function($scope) {
 
-  // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
-    scope: $scope
-  }).then(function($ionicModal) {
-    $scope.modal = $ionicModal;
-    
-  });
-
-  // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
-    $scope.modal.hide();
-  };
-
-  // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
-  };
-
-$scope.goToSignIn = function() {
-    $scope.closeLogin();
-    $state.go('app.signin'); 
-  };  
-
-
-  // Perform the login action when the user submits the login form
-  $scope.doLogin = function() {
-
-  
-    // Simulate a login delay. Remove this and replace with your login
-    // code if using a login system
-    $timeout(function() {
-      $scope.closeLogin();
-    }, 1000);
-  };
 })
 
-
+.controller('LoginCtrl', function($scope, $state) {
+// Form data for the login modal
+  $scope.loginData = {};
+  $scope.goToSignIn = function() {
+    $state.go('app.signin'); 
+  };  
+})
 
 .controller('PlaylistsCtrl', function($scope) {
   $scope.playlists = [
@@ -76,21 +45,11 @@ $scope.goToSignIn = function() {
   ];
 
 
-  /*$scope.avaluateDoctor = function() { 
-    var avaluateOperation = $ionicPopup.confirm({
-    /*template: '<input type="password">',
-    title: 'Avaliar Médico',
-    scope: $scope,
-     buttons: [{text: 'Cancel'},
-               {text: 'Save'}]
-    )}
-  }*/
-
    $scope.avalueteDoctor = function() {
     var avaluateOperation = $ionicPopup.confirm({
         title: 'Confirmar Avaliação?',
         subTitle: 'Atribua a quantiade de estrelas ao médico conforme o atendimento recebido:',
-        template: '<h3><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h3>', 
+        template: '<h1><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h1>', 
         cancelText: 'Cancelar',
         okText: 'Sim',
         cancelType: 'button-assertive',
@@ -153,9 +112,6 @@ $scope.goToSignIn = function() {
     ];
 
 })
-
-
-
 
 
 
