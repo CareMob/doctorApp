@@ -1,7 +1,17 @@
 var appointmentCtrl = angular.module('AppointmentCtrl', []);
 //var appointmentCtrl = angular.module('AppointmentCtrl', ['doctorsCtrl']);
 doctorsCtrl.factory('appointmentVO', function(){
-  return {appointmentVO: ""} 
+  appointmentVO = {};
+  appointmentVO.doctorId = 0;
+  appointmentVO.doctorName = "";
+  appointmentVO.specialityId = 0;
+  appointmentVO.specialityDesc = "";
+  appointmentVO.perIni = "";
+  appointmentVO.perEnd = "";
+  appointmentVO.convenioId = 0;
+
+  return appointmentVO;
+
 })
 
 
@@ -26,9 +36,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     $scope.specZmodal = modal;
   });
 
-
-
-
   // Triggered in the login modal to close it
   $scope.closeZoom = function(zoomId) {
     if(zoomId == "dz"){ 
@@ -50,10 +57,12 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 
   // Set fields on the Appointment form with zoom datas
   $scope.setDoctorChoice = function(doctor) {
-    $scope.appointmentVO.doctor = doctor.name;
+    $scope.appointmentVO.doctorId   = doctor.id;
+    $scope.appointmentVO.doctorName = doctor.name;
   };
   $scope.setSpecChoice = function(speciality){
-    $scope.appointmentVO.speciality = speciality.description;
+    $scope.appointmentVO.specialityId   = speciality.id;
+    $scope.appointmentVO.specialityDesc = speciality.description;
   };
 
 
@@ -61,6 +70,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
    Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
    **/
   $scope.goToVerify = function() {
+    console.log(appointmentVO);
      $state.go('app.setAppointment');   
   };  
 
