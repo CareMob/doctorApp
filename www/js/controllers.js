@@ -1,6 +1,9 @@
 angular.module('starter.controllers', [])
 
+
+
 .controller('AppCtrl', function($scope, $ionicPopup, $http) {
+
 
   $scope.cellphoneNumber = '';
   
@@ -57,7 +60,7 @@ angular.module('starter.controllers', [])
     });
 
   }
-  
+
 })
 
 .controller('LoginCtrl', function($scope, $state) {
