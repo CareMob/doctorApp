@@ -84,6 +84,16 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
     }
   })
 
+   .state('app.validationCode', {
+    url: "/validationCode",
+    views: {
+      'menuContent': {
+        templateUrl: "templates/validationCode.html",
+        controller: 'AppCtrl'
+      }
+    }
+  })
+
   .state('app.setAppointment', {
     url: "/setAppointment",
     views: {

@@ -2,15 +2,91 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('AppCtrl', function($scope, $ionicPopup, $http) {
-
+.controller('AppCtrl', function($scope, $ionicPopup, $http, $state) {
+   
+  var appID = '098a8991aefd43f08e8ad8b';
+  var appToken = '86bda5c58db34bbf9e560cbf59ecf799a20b1307';
 
   $scope.cellphoneNumber = '';
+  $scope.cellphoneNumberValidation = window.localStorage['cellphoneNumber'] ;
+  $scope.doctorAppNumber = window.localStorage['otp_start'] + 'XXXXX';
+  $scope.code = '';
+
+  $scope.isVerifiedNumber = function() {
+    
+    if (window.localStorage['verifiedNumber'] == 'yes'){
+       var alertPopup = $ionicPopup.alert({
+       title: 'Verificação do Smartphone',
+       template: 'Smartphone: ' + window.localStorage['cellphoneNumber'] + ', já está cadastrado' });
+    } else{
+      if (window.localStorage['cellphoneNumber'] > '' ){
+        $state.go('app.validationCode');
+      } else { $state.go('app.newUser'); }
+    }
+  }
+
+  $scope.validateCode = function(code) {
+     url = 'https://www.cognalys.com/api/v1/otp/confirm/?app_id=' + appID
+         + '&access_token=' + appToken
+         + '&keymatch=' + window.localStorage['keymatch'] 
+         + '&otp=' + window.localStorage['otp_start'] + code;
+
+     $http.get(url).
+        success(function(data, status, headers, config) {
+         if (data.status == 'failed'){
+            var alertPopup = $ionicPopup.alert({
+               title: 'Verificação do Smartphone',
+               template: 'Codigo de validação informado está incorreto!' });   
+             } else{
+               var alertPopup = $ionicPopup.alert({
+               title: 'Verificação do Smartphone',
+               template: 'Smartphone verificado com sucesso!' });
+               window.localStorage['verifiedNumber'] = 'yes';   
+            }
+         }).
+         error(function(data, status, headers, config) {
+         });
+ }
+
+  $scope.recieveNewCall = function() {
+    var mobile = '+55' +  window.localStorage['cellphoneNumber'] ;
+    var url = 'https://www.cognalys.com/api/v1/otp/?app_id=' + appID
+            + '&access_token=' + appToken
+            + '&mobile=' + mobile;
+
+    $http.get(url).
+    success(function(data, status, headers, config) {
+      if (data.status == 'failed'){
+         var alertPopup = $ionicPopup.alert({
+             title: 'Verificação do Smartphone',
+             template: 'Número informado inválido:' + data.mobile
+          });
+      } else {
+          window.localStorage['otp_start'] = data.otp_start;
+          window.localStorage['keymatch'] = data.keymatch;
+          $scope.doctorAppNumber = window.localStorage['otp_start'] + 'XXXXX';
+
+           var alertPopup = $ionicPopup.alert({
+             title: 'Verificação do Smartphone',
+             template: 'Foi realizada uma nova ligação para seu número!' + data.mobile
+          });
+      }
+    }).
+    error(function(data, status, headers, config) {
+      // called asynchronously if an error occurs
+      // or server returns response with an error status.
+      alert('nok');
+    });        
+
+  }
+  
+  $scope.changeMyNumber = function() {
+    $state.go('app.newUser'); 
+  }
   
   $scope.validateNumber = function(cellphoneNumber) {
 
-    var appID = '098a8991aefd43f08e8ad8b';
-    var appToken = '86bda5c58db34bbf9e560cbf59ecf799a20b1307';
+    
     var mobile = '+55' + cellphoneNumber;
     var url = 'https://www.cognalys.com/api/v1/otp/?app_id=' + appID
             + '&access_token=' + appToken
@@ -24,33 +100,10 @@ angular.module('starter.controllers', [])
              template: 'Número informado inválido:' + data.mobile
           });
       } else {
-          var alertPopup = $ionicPopup.alert({
-             title: 'Verificação do Smartphone',
-             template: 'Você recebeu uma ligação do número:' + data.otp_start + 'XXXXX. Informe os últimos cinco digitos para validar seu cadastro!' +
-                       '<input type="text"  id="txtCode">'
-          });
-          alertPopup.then(function(res) {
-           url = 'https://www.cognalys.com/api/v1/otp/confirm/?app_id=' + appID
-               + '&access_token=' + appToken
-               + '&keymatch=' + data.keymatch
-               + '&otp=' + data.otp_start + document.getElementById('txtCode').value;
-
-           $http.get(url).
-            success(function(data, status, headers, config) {
-              if (data.status == 'failed'){
-               var alertPopup = $ionicPopup.alert({
-               title: 'Verificação do Smartphone',
-               template: 'Codigo de validação informado está incorreto!' });   
-              } else{
-               var alertPopup = $ionicPopup.alert({
-               title: 'Verificação do Smartphone',
-               template: 'Smartphone verificado com sucesso!' });   
-               }
-
-            }).
-            error(function(data, status, headers, config) {
-            });
-         });
+          window.localStorage['cellphoneNumber'] =  cellphoneNumber;
+          window.localStorage['otp_start'] = data.otp_start;
+          window.localStorage['keymatch'] = data.keymatch;
+          $state.go('app.validationCode');
       }
     }).
     error(function(data, status, headers, config) {
@@ -65,7 +118,9 @@ angular.module('starter.controllers', [])
 
 .controller('LoginCtrl', function($scope, $state) {
 // Form data for the login modal
+
   $scope.loginData = {};
+  
   $scope.goToSignIn = function() {
     $state.go('app.signin'); 
   };  
@@ -75,86 +130,6 @@ angular.module('starter.controllers', [])
 .controller('SigninCtrl', function($scope, $stateParams) {
 
 })
-/*
-.controller('SchedulesCtrl', function($scope, $ionicPopup) {
-
-  $scope.ratingStates = [
-    {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
-    {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
-    {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
-    {stateOn: 'glyphicon-heart'},
-    {stateOff: 'glyphicon-off'}
-  ];
-
-
-   $scope.avalueteDoctor = function() {
-    var avaluateOperation = $ionicPopup.confirm({
-        title: 'Confirmar Avaliação?',
-        subTitle: 'Atribua a quantiade de estrelas ao médico conforme o atendimento recebido:',
-        template: '<h1><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h1>', 
-        cancelText: 'Cancelar',
-        okText: 'Sim',
-        cancelType: 'button-assertive',
-        okType: 'button-calm'});
-      avaluateOperation.then(function(res) {
-      
-   });
-  };  
- 
-
-  $scope.appointmentDoNotRealized = function() {
-    var cancelOperation = $ionicPopup.confirm({
-        title: 'Consulta não realizada?',
-        template: 'Ao clicar nesta opção a consulta será marcada como não realizada! Continuar?', 
-        cancelText: 'Não',
-        okText: 'Sim',
-        cancelType: 'button-assertive',
-        okType: 'button-calm'});
-     
-   cancelOperation.then(function(res) {
-      
-   });
-  };  
-
-  $scope.cancelAppointment = function() {
-    var cancelOperation = $ionicPopup.confirm({
-        title: 'Cancelar consulta?',
-        template: 'Ao clicar nesta opção a consulta será cancelada, liberando o horário na agenda do médico para outro paciente! Confirmar Cancelamento?', 
-        cancelText: 'Não',
-        okText: 'Sim',
-        cancelType: 'button-assertive',
-        okType: 'button-calm'});
-     
-   cancelOperation.then(function(res) {
-      
-   });
-  };  
-  
-   
-   $scope.setHidden = function(type, value){
-    currentDate = new Date();
-    appointmentDate = new Date(value);
-    returnvisible = true;
-    
-    if ( (appointmentDate < currentDate) && (type == "past")){
-        returnvisible = false; }
-
-    if ( (appointmentDate > currentDate) && (type == "future")){
-        returnvisible = false; }    
-
-    return returnvisible; 
-  }
-
-   // chamada banco
-
-    $scope.schedules = [
-       {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/07/2015' , hour: '14:30', id: 1 },  
-       {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 10/08/2015' , hour: '14:30', id: 2 },
-       {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 08/08/2015' , hour: '14:30', id: 3}  
-    ];
-
-})
-*/
 
 
 .controller('hisotryCtrl', function($scope){

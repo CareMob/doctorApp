@@ -1,0 +1,23 @@
+<ion-view view-title="Doctor APP">
+  <ion-content>
+        <label>
+          <span class="text-area"><h4>Nosso sistema realizou uma chamada para seu número. Favor informar os cinco últimos dígitos da chamada recebida!</h4></span>
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Número (Cliente):</span>
+          <input type="text"  readonly="true" ng-model="cellphoneNumberValidation">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Número (DoctorAPP):</span>
+          <input type="text"  readonly="true" ng-model="doctorAppNumber">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Digitos (XXXXX):</span>
+          <input type="text"  ng-model="code">
+        </label>
+
+        <button class="button button-block button-calm" type="button" ng-click="validateCode(code)">Validar Código</button>
+        <button class="button button-block button-balanced" type="button" ng-click="recieveNewCall()">Receber Nova Chamada</button>
+        <button class="button button-block button-assertive" type="button" ng-click="changeMyNumber()">Alterar Meu Número</button>
+  </ion-content>
+</ion-view>
