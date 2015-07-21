@@ -129,16 +129,6 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('LoginCtrl', function($scope, $state) {
-// Form data for the login modal
-
-  $scope.loginData = {};
-  
-  $scope.goToSignIn = function() {
-    $state.go('app.signin'); 
-  };  
-
- })
 
 .controller('ProfileCtrl', function($scope, $stateParams) {
   $scope.cellphoneNumber = window.localStorage['cellphoneNumber'] ;
