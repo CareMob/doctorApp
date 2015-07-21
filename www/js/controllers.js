@@ -2,8 +2,8 @@ angular.module('starter.controllers', [])
 
 
 
-.controller('AppCtrl', function($scope, $ionicPopup, $http, $state) {
-   
+.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector) {
+  var $state = $injector.get('$state');
   var appID = '098a8991aefd43f08e8ad8b';
   var appToken = '86bda5c58db34bbf9e560cbf59ecf799a20b1307';
 
@@ -12,19 +12,27 @@ angular.module('starter.controllers', [])
   $scope.doctorAppNumber = window.localStorage['otp_start'] + 'XXXXX';
   $scope.code = '';
 
-  $scope.isVerifiedNumber = function() {
-    
-    if (window.localStorage['verifiedNumber'] == 'yes'){
-       var alertPopup = $ionicPopup.alert({
-       title: 'Verificação do Smartphone',
-       template: 'Smartphone: ' + window.localStorage['cellphoneNumber'] + ', já está cadastrado' });
-    } else{
-      if (window.localStorage['cellphoneNumber'] > '' ){
-        $state.go('app.validationCode');
-      } else { $state.go('app.newUser'); }
-    }
-  }
+//window.localStorage['verifiedNumber'] = 'no';
+   
+  if (window.localStorage['verifiedNumber'] == 'yes'){
+   $scope.isLogged = true; 
+  } else {$scope.isLogged = false; }
 
+  $scope.loggedItems = [
+  {
+    label: 'Meus Horários',
+    target: '#/app/schedules'
+  },
+  {
+    label: 'Nova Consulta',
+    target: '#/app/appointment'
+  },
+  {
+    label: 'Histórico',
+    target: '#/app/history'
+  },
+];
+  
   $scope.validateCode = function(code) {
      url = 'https://www.cognalys.com/api/v1/otp/confirm/?app_id=' + appID
          + '&access_token=' + appToken
@@ -42,6 +50,7 @@ angular.module('starter.controllers', [])
                title: 'Verificação do Smartphone',
                template: 'Smartphone verificado com sucesso!' });
                window.localStorage['verifiedNumber'] = 'yes';   
+               window.location.reload();
             }
          }).
          error(function(data, status, headers, config) {

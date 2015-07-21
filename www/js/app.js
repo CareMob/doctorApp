@@ -19,8 +19,7 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
   $stateProvider
   .state('app', {
     url: "/app",
-    abstract: true,
-    templateUrl: "templates/menu.html",
+     templateUrl: "templates/menu.html",
     controller: 'AppCtrl'
   })
 
@@ -105,7 +104,16 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/schedules');
+  $urlRouterProvider.otherwise(function ($injector) {
+      var $state = $injector.get('$state');
+      if (window.localStorage['verifiedNumber'] == 'yes'){
+        $state.go('app.schedules');
+      } else {
+        if (window.localStorage['cellphoneNumber'] > '' ){
+          $state.go('app.validationCode');
+        } else { $state.go('app.newUser'); }
+      }
+    });
 });
 
 (function() {
