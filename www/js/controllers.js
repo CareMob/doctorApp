@@ -31,6 +31,10 @@ angular.module('starter.controllers', [])
     label: 'Histórico',
     target: '#/app/history'
   },
+  {
+    label: 'Perfil',
+    target: '#/app/profile'
+  },
 ];
   
   $scope.validateCode = function(code) {
@@ -136,7 +140,8 @@ angular.module('starter.controllers', [])
 
  })
 
-.controller('SigninCtrl', function($scope, $stateParams) {
+.controller('ProfileCtrl', function($scope, $stateParams) {
+  $scope.cellphoneNumber = window.localStorage['cellphoneNumber'] ;
 
 })
 

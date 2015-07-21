@@ -73,12 +73,12 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
     }
   })
 
-  .state('app.signin', {
-    url: "/signin",
+  .state('app.profile', {
+    url: "/profile",
     views: {
       'menuContent': {
-        templateUrl: "templates/signin.html",
-        controller: 'SigninCtrl'
+        templateUrl: "templates/profile.html",
+        controller: 'ProfileCtrl'
       }
     }
   })

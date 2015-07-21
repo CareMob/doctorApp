@@ -1,9 +1,9 @@
-<ion-view view-title="Cadastre-se">
+<ion-view view-title="Perfil do Usuário">
   <ion-content>
     	<div class="list">
 		  <label class="item item-input item-stacked-label">
 		    <span class="input-label">Usuário (DDD + Celular)</span>
-		    <input type="text" placeholder="5491001493">
+		    <input type="text" ng-model="cellphoneNumber" readonly="true">
 		  </label>
 		  <label class="item item-input item-stacked-label">
 		    <span class="input-label">Nome</span>
@@ -29,9 +29,13 @@
 		      <option>Fatíma</option>
 		    </select>
 		</label>
+		 <label class="item item-input item-stacked-label">
+		    <span class="input-label">Carteira</span>
+		    <input type="text">
+		  </label>
 		</div>
 		 <label class="item">
-          <button class="button button-block button-calm" type="submit">Realizar Cadastro</button>
+          <button class="button button-block button-calm" type="submit">Atualizar Perfil</button>
         </label>
 
    	</ion-content>
