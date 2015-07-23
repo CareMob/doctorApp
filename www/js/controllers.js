@@ -45,7 +45,7 @@ angular.module('starter.controllers', [])
 
      $http.get(url).
         success(function(data, status, headers, config) {
-         if (data.status == 'failed'){
+         if (data.status == 'fajiled'){
             var alertPopup = $ionicPopup.alert({
                title: 'Verificação do Smartphone',
                template: 'Codigo de validação informado está incorreto!' });   
@@ -54,10 +54,14 @@ angular.module('starter.controllers', [])
                title: 'Verificação do Smartphone',
                template: 'Smartphone verificado com sucesso!' });
                window.localStorage['verifiedNumber'] = 'yes';   
+               $state.go('app.profile'); 
                window.location.reload();
             }
          }).
          error(function(data, status, headers, config) {
+           var alertPopup = $ionicPopup.alert({
+               title: 'Verificação do Smartphone',
+               template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
          });
  }
 
@@ -86,9 +90,9 @@ angular.module('starter.controllers', [])
       }
     }).
     error(function(data, status, headers, config) {
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-      alert('nok');
+      var alertPopup = $ionicPopup.alert({
+               title: 'Verificação do Smartphone',
+               template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
     });        
 
   }
@@ -120,9 +124,9 @@ angular.module('starter.controllers', [])
       }
     }).
     error(function(data, status, headers, config) {
-      // called asynchronously if an error occurs
-      // or server returns response with an error status.
-      alert('nok');
+      var alertPopup = $ionicPopup.alert({
+               title: 'Verificação do Smartphone',
+               template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
     });
 
   }
@@ -132,6 +136,7 @@ angular.module('starter.controllers', [])
 
 .controller('ProfileCtrl', function($scope, $stateParams) {
   $scope.cellphoneNumber = window.localStorage['cellphoneNumber'] ;
+
 
 })
 
