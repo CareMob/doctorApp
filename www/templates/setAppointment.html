@@ -1,5 +1,19 @@
-<ion-view view-title="Escolher horário">
-	<ion-content>
-    	<h1> Criar form Escolher horário </h1>
+<ion-view view-title="Escolher horário" ng-controller="newAppointmentCtrl">   	
+    	
+    <ion-content class="padding">
+		<h1> Informações para a pesquisa de horarios disponiveis</h1>
+        <div class="list list-inset">
+        	<label class="item item-input  item-stacked-label">
+          		<span class="input-label">Medico</span>	
+            	<!--input type="text" placeholder="Medico ID" disable ng-model="appointmentVO.doctorId"-->
+            	<input type="text" placeholder="Medico" disable ng-model="appointmentVO.doctorName">
+          	</label>
+          	<label class="item item-input  item-stacked-label">
+            	<span class="input-label">Especialidade</span>	
+            	<!--input type="text" placeholder="Especialidade ID" disable ng-model="appointmentVO.specialityId"-->
+            	<input type="text" placeholder="Especialidade " disable='true' ng-model="appointmentVO.specialityDesc">
+          	</label>
+    		</div>      
 	</ion-content>
+
 </ion-view>

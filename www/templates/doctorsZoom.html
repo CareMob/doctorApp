@@ -2,7 +2,7 @@
   <ion-header-bar>
      <h1 class="title">Busca Médicos</h1>
     <div class="buttons">
-      <button class="button button-clear" ng-click="closeZoom()">Voltar</button>
+      <button class="button button-clear" ng-click="closeZoom('dz')">Voltar</button>
     </div>
   </ion-header-bar>
   <ion-content>
@@ -19,7 +19,7 @@
             <div class="item-content">
               <p>
                 <span>Dr(a). </span>
-                <span> {{doctor.name}} {{doctor.speciality}}</span>                           
+                <span> {{doctor.name}} {{doctor.lastname}} - {{doctor.doctor.speciality.description.toProperCase()}}</span>                           
               </p>              
             </div>
             <i class="radio-icon ion-checkmark"></i>

@@ -57,11 +57,11 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 
   // Set fields on the Appointment form with zoom datas
   $scope.setDoctorChoice = function(doctor) {
-    $scope.appointmentVO.doctorId   = doctor.id;
-    $scope.appointmentVO.doctorName = doctor.name;
+    $scope.appointmentVO.doctorId   = doctor._id;
+    $scope.appointmentVO.doctorName = doctor.name + ' ' + doctor.lastname;
   };
   $scope.setSpecChoice = function(speciality){
-    $scope.appointmentVO.specialityId   = speciality.id;
+    $scope.appointmentVO.specialityId   = speciality._id;
     $scope.appointmentVO.specialityDesc = speciality.description;
   };
 
