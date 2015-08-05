@@ -22,6 +22,10 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 
   // Form data for the Appointments
   $scope.loginData = {};
+
+  /* ----------------------------------------------------------------------------------------- */
+  /* ----------------------------------- ZOOM DEFINITIONS ------------------------------------ */
+  /* ----------------------------------------------------------------------------------------- */
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/doctorsZoom.html', {
     scope: $scope
@@ -36,13 +40,26 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     $scope.specZmodal = modal;
   });
 
+    // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/cityZoom.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.cityZmodal = modal;
+  });
+
   // Triggered in the login modal to close it
   $scope.closeZoom = function(zoomId) {
-    if(zoomId == "dz"){ 
-      $scope.docZmodal.hide();      
-    }else{
-      $scope.specZmodal.hide();
-    }
+    switch(zoomId){
+      case "dz":
+        $scope.docZmodal.hide();      
+        break;  
+      case "ct":
+        $scope.cityZmodal.hide();
+        break;
+      case "sp":  
+        $scope.specZmodal.hide();
+        break;
+    }    
   };
   // Open the doctors modal
   $scope.doctorZoom = function() {        
@@ -52,7 +69,13 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   $scope.specialityZoom = function() {    
     $scope.specZmodal.show();
   };
+// Open the specialities modal
+  $scope.cityZoom = function() {    
+    $scope.cityZmodal.show();
+  };
 
+  /* ----------------------------------------------------------------------------------------- */
+  /* ----------------------------------------------------------------------------------------- */
 
   // Set fields on the Appointment form with zoom datas
   $scope.setDoctorChoice = function(doctor) {

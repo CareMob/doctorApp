@@ -1,0 +1,20 @@
+<ion-view ng-controller="cityCtrl" >  
+  <ion-header-bar>
+     <h1 class="title">Cidades</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeZoom('ct')">Voltar</button>
+    </div>
+  </ion-header-bar>
+  <ion-content>
+    <div class="form-group">
+      <div class="row">      
+          <div class="move-down" >
+            <label class="control-label" for="Autocomplete">Cidade</label>
+            <input type="text" id="Autocomplete" class="form-control" ng-autocomplete="result2" details="details2" options="options2" />
+          </div>
+      </div>   
+    </div>
+
+
+  </ion-content>
+</ion-view>

@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngAutocomplete'])
 
 
 
@@ -136,6 +136,21 @@ angular.module('starter.controllers', [])
 
 .controller('ProfileCtrl', function($scope, $stateParams) {
   $scope.cellphoneNumber = window.localStorage['cellphoneNumber'] ;
+
+
+})
+
+
+.controller('cityCtrl', function($scope, $stateParams) {
+   /* Config para utilização do Autocomplete das cidades. */
+  $scope.result2 = '';
+  $scope.options2 = { country: 'br',
+                    types: '(cities)'};   
+  $scope.details2 = '';
+
+
+
+  
 
 
 })
