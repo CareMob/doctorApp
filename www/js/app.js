@@ -13,6 +13,9 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
     }
   });
 })
+.constant('Doctappbknd', {
+  tableUrl: 'https://doctorappbknd.herokuapp.com/api'
+})
 
 .config(function($stateProvider, $urlRouterProvider) {
 

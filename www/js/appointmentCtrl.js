@@ -17,7 +17,8 @@ doctorsCtrl.factory('appointmentVO', function(){
 
 appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $state, appointmentVO) {
   
-  $scope.appointmentVO = appointmentVO;
+  //$scope.appointmentVO = appointmentVO;
+  $scope.appointmentVO = {};
 
   // Form data for the Appointments
   $scope.loginData = {};
@@ -27,7 +28,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   }).then(function(modal) {
     $scope.docZmodal = modal;
   });
-
 
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/specialityZoom.html', {
@@ -39,14 +39,13 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   // Triggered in the login modal to close it
   $scope.closeZoom = function(zoomId) {
     if(zoomId == "dz"){ 
-      $scope.docZmodal.hide();
-      console.log("DoctorZoom CLose");
+      $scope.docZmodal.hide();      
     }else{
       $scope.specZmodal.hide();
     }
   };
   // Open the doctors modal
-  $scope.doctorZoom = function() {    
+  $scope.doctorZoom = function() {        
     $scope.docZmodal.show();
   };
   // Open the specialities modal
@@ -71,7 +70,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
    **/
   $scope.goToVerify = function() {
     console.log(appointmentVO);
-     $state.go('app.setAppointment');   
+    $state.go('app.setAppointment');   
   };  
 
 })
