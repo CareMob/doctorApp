@@ -1,6 +1,7 @@
 <ion-view view-title="Escolher horário">  
   <ion-content>
-      <ion-list>
+      {{appointmentVO}}
+      <ion-list>      
         <div ng-repeat="freeTime in schdlFreeTime.List">
             <ion-item  class="item-stable"
                              ng-click="toggleGroup(freeTime.day)"
@@ -8,7 +9,7 @@
               <i class="icon" ng-class="isGroupShown(freeTime.day) ? 'ion-minus' : 'ion-plus'"></i>
                     &nbsp;
               <span><b>Dia: </b></span>
-              <span> {{freeTime.day}} </span>          
+              <span> {{freeTime.day}} / {{freeTime.month}} </span>          
           </ion-item>
 
           <ion-item class="item-accordion"

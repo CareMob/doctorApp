@@ -37,7 +37,7 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
       }
     })
 
-    .state('app.login', {
+    /*.state('app.login', {
       url: "/login",
       views: {
         'menuContent': {
@@ -45,7 +45,7 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
           controller: 'LoginCtrl'
         }
       }
-    })
+    })*/
 
   .state('app.appointment', {
     url: "/appointment",
