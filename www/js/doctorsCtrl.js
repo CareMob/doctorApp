@@ -12,6 +12,7 @@ doctorsCtrl.service('DoctorsModel', function($http, Doctappbknd) {
 
     service.all = function () {
         return $http.get(getUrl());        
+        //return $http.get('http://localhost:8080/api/doctors');
     };
 
     /*
@@ -52,10 +53,10 @@ doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $htt
     function getDoctors() {
         //console.log('loading......');        
         DoctorsModel.all()
-            .then(function (result) {
+            .then(function (result) {                
                 $scope.doctors = result.data;
                 //console.log('remove loading......');        
-                //console.log(result.data.Object);
+                //console.log(result.data);
             });
             /*.success(function(data, status, headers, config) {                    
                 //console.log(data);
@@ -68,7 +69,7 @@ doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $htt
     }
 
     doctorsZomm.doctors = {};   
-    //getDoctors();   
+    getDoctors();   
 
 })
 
