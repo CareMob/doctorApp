@@ -1,6 +1,6 @@
 var doctorsCtrl = angular.module('doctorsCtrl', ['AppointmentCtrl']);
 
-doctorsCtrl.service('DoctorsModel', function($http, Doctappbknd) {
+doctorsCtrl.service('DoctorService', function($http, Doctappbknd) {
     var service = this,        
         path = '/doctors/';
         //tableUrl = '/1/objects/',
@@ -36,11 +36,27 @@ doctorsCtrl.service('DoctorsModel', function($http, Doctappbknd) {
         return $http.delete(getUrlForId(itemId));
     };
     */
-})
+}) // Service
+
+doctorsCtrl.Factory('DoctorFactory', function(){
+    var doctorObj = [];
+        //doctorObj.List = [];
+
+    doctorObj.addList = function (list){
+        doctorObj = list;
+    }   
+
+    doctorObj.delList = function (){
+        doctorObj = []; //melhorar isso ahahha
+    }
+      
+    return doctorObj; 
+
+}) //Factory
 
 
 /* Função para busca de Medico para popular zooms.. Doctappbknd */
-doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $http, DoctorsModel){
+doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $http, DoctorService){
 	$scope.appointmentVO = appointmentVO;
 
     var doctorsZomm = this;
@@ -52,7 +68,7 @@ doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $htt
     // =====================================================================================================================
     function getDoctors() {
         //console.log('loading......');        
-        DoctorsModel.all()
+        DoctorService.all()
             .then(function (result) {                
                 $scope.doctors = result.data;
                 //console.log('remove loading......');        

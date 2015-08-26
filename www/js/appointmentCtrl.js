@@ -1,4 +1,4 @@
-var appointmentCtrl = angular.module('AppointmentCtrl', []);
+var appointmentCtrl = angular.module('AppointmentCtrl', ['doctorsCtrl']);
 //var appointmentCtrl = angular.module('AppointmentCtrl', ['doctorsCtrl']);
 appointmentCtrl.factory('appointmentVO', function(){
   var appointmentVO = {};
@@ -33,9 +33,8 @@ doctorsCtrl.factory('scheduleFactory', function(){
 
 })
 /* --  --*/
-
-appointmentCtrl.service('ScheduleModel', function($http, Doctappbknd) {
-    var service = this,        
+appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
+    var service = this,
         path = '/schedule/';
         //tableUrl = '/1/objects/',
 
@@ -43,14 +42,38 @@ appointmentCtrl.service('ScheduleModel', function($http, Doctappbknd) {
         //return Backand.getApiUrl() + tableUrl + path;
         return Doctappbknd.tableUrl + path;
     };
-
     service.all = function (param) {
-        return $http.post(getUrl(), param );        
+        return $http.get(getUrl(path), {
+            params: { param }
+        });
     };
+    service.allBySpec = function(param){
+        return $http.get(getUrl('/docotrs/'), {
+            params: {'specialityId' : param}
+        });
+    };
+
+    service.save = function(param) {
+      return $http.post(getUrl(path), param );
+    };
+})
+
+appointmentCtrl.service('LoadingService', function($ionicLoading){
+  var service = this;
+
+  //Loading
+  service.show = function() {
+    $ionicLoading.show({
+      template: 'Buscando Informações...'
+    });
+  };
+  service.hide = function(){
+    $ionicLoading.hide();
+  };
 
 })
 
-appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $state, appointmentVO, scheduleFactory, ScheduleModel) {
+appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, appointmentVO, scheduleFactory, ScheduleService, DoctorFactory, LoadingService) {
   
   $scope.appointmentVO = appointmentVO;
   //$scope.scheduleVO    = scheduleVO;
@@ -119,7 +142,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 
   /* ----------------------------------------------------------------------------------------- */
   /* ----------------------------------------------------------------------------------------- */
-
   // Set fields on the Appointment form with zoom datas
   $scope.setDoctorChoice = function(doctor) {    
     $scope.appointmentVO.doctorId   = doctor._id;
@@ -132,7 +154,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     //console.log(appointmentVO);
   };
 
-
   /**
    Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
    **/
@@ -142,38 +163,51 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     scheduleFactory.delList();
         
     //Melhorar esse codigo ahahah 
-    appointmentVO.monthIni = appointmentVO.perIni.getMonth() + 1,
-    appointmentVO.monthEnd = appointmentVO.perEnd.getMonth() + 1;   
+    //appointmentVO.monthIni = /*appointmentVO.perIni.getMonth() + 1, */
+    //appointmentVO.monthEnd = /*appointmentVO.perEnd.getMonth() + 1; */
+
+    //delete appointmentVO['perIni'];
+    //delete appointmentVO['perEnd'];
 
     //console.log(appointmentVO);
-
-
-
-    //$state.go('app.setAppointment');
+    
+    LoadingService.show();
     //Chama API para verificar horarios disponiveis By Doctor    
-    //if(appointmentVO.doctorId != ""){      
-      ScheduleModel.all(appointmentVO)
+    if(appointmentVO.doctorId != ""){
+      ScheduleService.all(appointmentVO)
             .then(function (result) {
-              //console.log(result.data);                     
-              scheduleFactory.addList(result.data);              
-              $state.go('app.setAppointment');                            
-                
+              //console.log(result.data);  
+              LoadingService.hide();    
+
+              if(result.data.length != 0){
+                scheduleFactory.addList(result.data);              
+                $state.go('app.setAppointment');                      
+              }else{
+                var alertPopup = $ionicPopup.alert({
+                    title: 'Busca horários',
+                    template: 'Não existem horários disponiveis para os dados informados.' });
+              }
             });
+    }else{ //Chama API para verificar horarios disponiveis By Speciality
+      ScheduleService.allBySpec(appointmentVO.specialityId)
+            .then(function(result){
+                LoadingService.hide();                
+                //Chama tela de medicos.
+                DoctorFactory.addList(result);
+                $state.go('app.doctors');
 
-    //}else{ //Chama API para verificar horarios disponiveis By Speciality
-
-    //}
-
+            }); //then
+    } //else
        
   };  
 
 })
 
-appointmentCtrl.controller('setAppointmentCtrl', function($scope, appointmentVO, scheduleFactory, ScheduleModel ) {
+appointmentCtrl.controller('setAppointmentCtrl', function($scope, $ionicPopup, appointmentVO, scheduleFactory, ScheduleService ) {
 
   $scope.appointmentVO     = appointmentVO;
-  $scope.schdlFreeTime     =  scheduleFactory;
-
+  $scope.schdlFreeTime     = scheduleFactory;
+  var setAppointmentVO     = {};
 
   $scope.toggleGroup = function(day) {
     if ($scope.isGroupShown(day)) {
@@ -185,6 +219,25 @@ appointmentCtrl.controller('setAppointmentCtrl', function($scope, appointmentVO,
   $scope.isGroupShown = function(day) {
     return $scope.shownGroup === day;
   };
+  //Seta horario escolhido para marcar a consulta.
+  $scope.setChange = function(hourChk){
+    setAppointmentVO._hourId = hourChk._id;
+    //console.log(setAppointmentVO);
+  }
+
+  $scope.hitAppoint = function(){
+    //console.log(setAppointmentVO); 
+
+    //Seta usuario que vai marcar a consulta.
+    setAppointmentVO._userId = 5499544269;
+
+     ScheduleService.save(setAppointmentVO)
+        .then(function(result){
+
+          console.log(result);
+
+     });
+  }
 
 });
 

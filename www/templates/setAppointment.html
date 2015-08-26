@@ -1,26 +1,39 @@
-<ion-view view-title="Escolher horário">  
+<ion-view view-title="Seleção de horário">  
   <ion-content>
-      {{appointmentVO}}
+     <!-- {{appointmentVO}} -->
+     {{hourChk.hour}}
       <ion-list>      
         <div ng-repeat="freeTime in schdlFreeTime.List">
             <ion-item  class="item-stable"
-                             ng-click="toggleGroup(freeTime.day)"
-                             ng-class="{active: isGroupShown(freeTime.day)}">
+                              ng-click="toggleGroup(freeTime.day)"
+                              ng-class="{active: isGroupShown(freeTime.day)}">
               <i class="icon" ng-class="isGroupShown(freeTime.day) ? 'ion-minus' : 'ion-plus'"></i>
                     &nbsp;
               <span><b>Dia: </b></span>
               <span> {{freeTime.day}} / {{freeTime.month}} </span>          
           </ion-item>
 
-          <ion-item class="item-accordion"
-                    ng-repeat="item in freeTime.scheduleTime"
-                      ng-show="isGroupShown(freeTime.day)">
-              <h2>{{item.hour}} </h2>
+          <ion-item class="item-accordion item-radio"
+                    ng-repeat="hourChk in freeTime.scheduleTime"
+                      ng-show="isGroupShown(freeTime.day)">     
+
+              
+
+              <label class="item item-radio"  ng-click="setChange(hourChk);"> 
+                <input type="radio" name="group" >
+                  <div class="item-content">
+                    <p>                     
+                      <span> {{hourChk.hour}} </span>                           
+                    </p>              
+                  </div>
+                  <i class="radio-icon ion-checkmark"></i>
+              </label>
+
           </ion-item>
         </div>
       </ion-list>
       <!-- Ao clitar trazer os horarios em um modal.. -->
-    <button class="button button-block button-balanced" ng-click="">
+    <button class="button button-block button-balanced" ng-click="hitAppoint()">
         Marcar consulta
     </button>
     </ion-content>

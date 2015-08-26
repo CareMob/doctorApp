@@ -1,17 +1,11 @@
-<ion-view ng-controller="doctorsSearchZoom" data-ng-init="getDoctors()">  
-  <ion-header-bar>
-     <h1 class="title">Busca Médicos</h1>
-    <div class="buttons">
-      <button class="button button-clear" ng-click="closeZoom('dz')">Voltar</button>
-    </div>
-  </ion-header-bar>
+<ion-view  view-title="Seleção de Médico">  
   <ion-content>
     <label class="item item-input">
       <i class="icon ion-search placeholder-icon"></i>
       <input type="search" ng-model="searchText" placeholder="Filtrar...">
     </label>
 
-    <ion-list id="searchTextResults"  >
+    <ion-list id="searchTextResults">
       
       <ion-item ng-repeat="doctor in doctors | filter:searchText"  class="item item-radio">
         <label class="item item-radio" ng-click="setDoctorChoice(doctor); closeZoom('dz');"> 
