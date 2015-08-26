@@ -2,18 +2,26 @@ angular.module('starter.controllers', ['ngAutocomplete'])
 
 
 
-.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector) {
+.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading) {
   var $state = $injector.get('$state');
   var appID = '098a8991aefd43f08e8ad8b';
   var appToken = '86bda5c58db34bbf9e560cbf59ecf799a20b1307';
+
+
+  $scope.show = function(message) {
+    $ionicLoading.show({
+      template: message
+    });
+  };
+  $scope.hide = function(){
+    $ionicLoading.hide();
+  };
 
   $scope.cellphoneNumber = '';
   $scope.cellphoneNumberValidation = window.localStorage['cellphoneNumber'] ;
   $scope.doctorAppNumber = window.localStorage['otp_start'] + 'XXXXX';
   $scope.code = '';
 
-//window.localStorage['verifiedNumber'] = 'no';
-   
   if (window.localStorage['verifiedNumber'] == 'yes'){
    $scope.isLogged = true; 
   } else {$scope.isLogged = false; }
@@ -38,6 +46,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
 ];
   
   $scope.validateCode = function(code) {
+     $scope.show('Validando Informações...');
      url = 'https://www.cognalys.com/api/v1/otp/confirm/?app_id=' + appID
          + '&access_token=' + appToken
          + '&keymatch=' + window.localStorage['keymatch'] 
@@ -45,6 +54,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
 
      $http.get(url).
         success(function(data, status, headers, config) {
+          $scope.hide();
          if (data.status == 'fajiled'){
             var alertPopup = $ionicPopup.alert({
                title: 'Verificação do Smartphone',
@@ -59,6 +69,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
             }
          }).
          error(function(data, status, headers, config) {
+           $scope.hide();
            var alertPopup = $ionicPopup.alert({
                title: 'Verificação do Smartphone',
                template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
@@ -66,6 +77,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
  }
 
   $scope.recieveNewCall = function() {
+    $scope.show('Realizando Chamada...');
     var mobile = '+55' +  window.localStorage['cellphoneNumber'] ;
     var url = 'https://www.cognalys.com/api/v1/otp/?app_id=' + appID
             + '&access_token=' + appToken
@@ -73,6 +85,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
 
     $http.get(url).
     success(function(data, status, headers, config) {
+      $scope.hide();
       if (data.status == 'failed'){
          var alertPopup = $ionicPopup.alert({
              title: 'Verificação do Smartphone',
@@ -90,6 +103,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
       }
     }).
     error(function(data, status, headers, config) {
+      $scope.hide();
       var alertPopup = $ionicPopup.alert({
                title: 'Verificação do Smartphone',
                template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
@@ -103,7 +117,8 @@ angular.module('starter.controllers', ['ngAutocomplete'])
   
   $scope.validateNumber = function(cellphoneNumber) {
 
-    
+    $scope.show('Validando Informações...');
+
     var mobile = '+55' + cellphoneNumber;
     var url = 'https://www.cognalys.com/api/v1/otp/?app_id=' + appID
             + '&access_token=' + appToken
@@ -111,6 +126,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
 
     $http.get(url).
     success(function(data, status, headers, config) {
+      $scope.hide();
       if (data.status == 'failed'){
          var alertPopup = $ionicPopup.alert({
              title: 'Verificação do Smartphone',
@@ -124,6 +140,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
       }
     }).
     error(function(data, status, headers, config) {
+      $scope.hide();
       var alertPopup = $ionicPopup.alert({
                title: 'Verificação do Smartphone',
                template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
