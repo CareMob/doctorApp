@@ -37,7 +37,7 @@ doctorsCtrl.service('DoctorService', function($http, Doctappbknd) {
     };
     */
 }) // Service
-
+/*
 doctorsCtrl.Factory('DoctorFactory', function(){
     var doctorObj = [];
         //doctorObj.List = [];
@@ -53,6 +53,7 @@ doctorsCtrl.Factory('DoctorFactory', function(){
     return doctorObj; 
 
 }) //Factory
+*/
 
 
 /* Função para busca de Medico para popular zooms.. Doctappbknd */

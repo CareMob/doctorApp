@@ -1,9 +1,9 @@
-var appointmentCtrl = angular.module('AppointmentCtrl', ['doctorsCtrl']);
+var appointmentCtrl = angular.module('AppointmentCtrl', []);
 //var appointmentCtrl = angular.module('AppointmentCtrl', ['doctorsCtrl']);
 appointmentCtrl.factory('appointmentVO', function(){
   var appointmentVO = {};
   
-  appointmentVO.doctorId = 0;
+  appointmentVO.doctorId = "";
   appointmentVO.doctorName = "";
   appointmentVO.specialityId = 0;
   appointmentVO.specialityDesc = "";
@@ -35,20 +35,23 @@ doctorsCtrl.factory('scheduleFactory', function(){
 /* --  --*/
 appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
     var service = this,
-        path = '/schedule/';
+        route = '/schedule/';
         //tableUrl = '/1/objects/',
 
-    function getUrl() {
+    function getUrl(path) {
         //return Backand.getApiUrl() + tableUrl + path;
+        console.log("PathRoute: " + path)
         return Doctappbknd.tableUrl + path;
     };
     service.all = function (param) {
-        return $http.get(getUrl(path), {
+        return $http.get(getUrl(route), {
             params: { param }
         });
     };
     service.allBySpec = function(param){
-        return $http.get(getUrl('/docotrs/'), {
+        route = '/doctors/';        
+        console.log(getUrl(route));
+        return $http.get(getUrl(route), {
             params: {'specialityId' : param}
         });
     };
@@ -72,8 +75,8 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
   };
 
 })
-
-appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, appointmentVO, scheduleFactory, ScheduleService, DoctorFactory, LoadingService) {
+//DoctorFactory
+appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, appointmentVO, scheduleFactory, ScheduleService, LoadingService) {
   
   $scope.appointmentVO = appointmentVO;
   //$scope.scheduleVO    = scheduleVO;
@@ -92,6 +95,14 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     $scope.docZmodal = modal;
   });
 
+ // Create the login modal that we will use later
+  $ionicModal.fromTemplateUrl('templates/doctors.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.docLmodal = modal;
+  });
+
+
   // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/specialityZoom.html', {
     scope: $scope
@@ -100,11 +111,11 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   });
 
     // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/cityZoom.html', {
+  /*$ionicModal.fromTemplateUrl('templates/cityZoom.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.cityZmodal = modal;
-  });
+  });*/
 
   // Triggered in the login modal to close it
   $scope.closeZoom = function(zoomId) {
@@ -113,13 +124,15 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
         $scope.docZmodal.hide();      
         //console.log(zoomId);
         break;  
-      case "ct":
+      /*case "ct":
         $scope.cityZmodal.hide();
         //console.log(zoomId);
-        break;
+        break;*/
       case "sp":  
         $scope.specZmodal.hide();
         break;
+      case "dl":
+        $scope.docLmodal.hide();
       default:
         $scope.specZmodal.hide();
         //console.log(zoomId);
@@ -172,14 +185,14 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     //console.log(appointmentVO);
     
     LoadingService.show();
-    //Chama API para verificar horarios disponiveis By Doctor    
+    //Chama API para verificar horarios disponiveis By Doctor   
     if(appointmentVO.doctorId != ""){
       ScheduleService.all(appointmentVO)
             .then(function (result) {
-              //console.log(result.data);  
+              console.log(result.data);  
               LoadingService.hide();    
 
-              if(result.data.length != 0){
+              if(result.data.length > 0){
                 scheduleFactory.addList(result.data);              
                 $state.go('app.setAppointment');                      
               }else{
@@ -190,11 +203,23 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
             });
     }else{ //Chama API para verificar horarios disponiveis By Speciality
       ScheduleService.allBySpec(appointmentVO.specialityId)
-            .then(function(result){
-                LoadingService.hide();                
+            .then(function(resultDoc){
+                LoadingService.hide(); 
+
                 //Chama tela de medicos.
-                DoctorFactory.addList(result);
-                $state.go('app.doctors');
+                //DoctorFactory.addList(result);
+                //$state.go('app.doctors');
+                console.log(resultDoc.data);
+                if(resultDoc.data.length > 0){
+                  console.log(resultDoc.data.success);
+                  $scope.doctorsList = resultDoc.data;                 
+                  $scope.docLmodal.show();
+                }else{
+                  var alertPopup = $ionicPopup.alert({
+                    title: 'Busca Médicos',
+                    template: 'Não existem médicos cadastrados para a espcialidade: {{appointmentVO.specialityDesc}} '  });                  
+                }
+
 
             }); //then
     } //else

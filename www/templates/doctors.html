@@ -1,20 +1,28 @@
-<ion-view  view-title="Seleção de Médico">  
+<ion-view >  
+  <ion-header-bar>
+     <h1 class="title">Seleciona Médico</h1>
+    <div class="buttons">
+      <button class="button button-clear" ng-click="closeZoom('dl')">Voltar</button>
+    </div>
+  </ion-header-bar>
   <ion-content>
     <label class="item item-input">
       <i class="icon ion-search placeholder-icon"></i>
       <input type="search" ng-model="searchText" placeholder="Filtrar...">
     </label>
 
-    <ion-list id="searchTextResults">
+    <ion-list id="searchTextResults"  >
       
-      <ion-item ng-repeat="doctor in doctors | filter:searchText"  class="item item-radio">
-        <label class="item item-radio" ng-click="setDoctorChoice(doctor); closeZoom('dz');"> 
-          <input type="radio" name="group">
-            <div class="item-content">
-              <p>
-                <span>Dr(a). </span>
-                <span> {{doctor.name}} {{doctor.lastname}} - {{doctor.doctor.speciality.description.toProperCase()}}</span>                           
-              </p>              
+      <ion-item ng-repeat="doctor in doctorsList | filter:searchText"  class="item item-radio">
+        <label class="item item-radio" ng-click="setDoctorChoice(doctor);"> 
+            <input type="radio" name="group">            
+            <div class="list">
+              <a class="item item-avatar" href="#">
+                <img src="img/user.png">
+                <h2> {{doctor.name}} {{doctor.lastname}}</h2>
+                <p>  {{doctor.doctor.contact}} </p>
+                <p>  Rating: </p>
+              </a>
             </div>
             <i class="radio-icon ion-checkmark"></i>
         </label>
