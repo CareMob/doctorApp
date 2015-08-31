@@ -7,8 +7,8 @@ appointmentCtrl.factory('appointmentVO', function(){
   appointmentVO.doctorName = "";
   appointmentVO.specialityId = 0;
   appointmentVO.specialityDesc = "";
-  appointmentVO.perIni = "";
-  appointmentVO.perEnd = "";
+  appointmentVO.perIni = '';
+  appointmentVO.perEnd = '';
   appointmentVO.monthIni = 0;
   appointmentVO.monthEnd = 0; 
   appointmentVO.convenioId = 0;
@@ -49,16 +49,17 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
         });
     };
     service.allBySpec = function(param){
-        route = '/doctors/';        
-        console.log(getUrl(route));
-        return $http.get(getUrl(route), {
+        var docRoute = '/doctors/';        
+        console.log(getUrl(docRoute));
+        return $http.get(getUrl(docRoute), {
             params: {'specialityId' : param}
         });
     };
 
     service.save = function(param) {
-      return $http.post(getUrl(path), param );
+      return $http.post(getUrl(route), param );
     };
+
 })
 
 appointmentCtrl.service('LoadingService', function($ionicLoading){
@@ -79,11 +80,28 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
 appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, appointmentVO, scheduleFactory, ScheduleService, LoadingService) {
   
   $scope.appointmentVO = appointmentVO;
-  //$scope.scheduleVO    = scheduleVO;
-
-
   // Form data for the Appointments
   $scope.loginData = {};
+
+  /* ----------------------------------------------------------------------------------------- */
+  /* ----------------------------------- RATING DEFINITION ----------------------------------- */
+  /* ----------------------------------------------------------------------------------------- */
+  $scope.max = 5;
+  $scope.setRate = function(value){
+    $scope.rate = value;
+  }
+  $scope.setHidden = function(value){
+    if(value > 0) {return false;}
+    else {return true;}    
+  }
+  $scope.isReadonly = true;
+  $scope.ratingStates = [
+    {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
+    {stateOn: 'glyphicon-star',    stateOff: 'glyphicon-star-empty'},
+    {stateOn: 'glyphicon-heart',   stateOff: 'glyphicon-ban-circle'},
+    {stateOn: 'glyphicon-heart'},
+    {stateOff: 'glyphicon-off'}
+  ];
 
   /* ----------------------------------------------------------------------------------------- */
   /* ----------------------------------- ZOOM DEFINITIONS ------------------------------------ */
@@ -159,13 +177,16 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   $scope.setDoctorChoice = function(doctor) {    
     $scope.appointmentVO.doctorId   = doctor._id;
     $scope.appointmentVO.doctorName = doctor.name + ' ' + doctor.lastname;
-    //console.log(appointmentVO);
   };
   $scope.setSpecChoice = function(speciality){
     $scope.appointmentVO.specialityId   = speciality._id;
     $scope.appointmentVO.specialityDesc = speciality.description;
-    //console.log(appointmentVO);
   };
+
+  $scope.clearForm = function(){
+    $scope.appointmentVO ={};
+    appointmentVO = $scope.appointmentVO;
+  }
 
   /**
    Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
@@ -205,7 +226,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
       ScheduleService.allBySpec(appointmentVO.specialityId)
             .then(function(resultDoc){
                 LoadingService.hide(); 
-
                 //Chama tela de medicos.
                 //DoctorFactory.addList(result);
                 //$state.go('app.doctors');
@@ -219,8 +239,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
                     title: 'Busca Médicos',
                     template: 'Não existem médicos cadastrados para a espcialidade: {{appointmentVO.specialityDesc}} '  });                  
                 }
-
-
             }); //then
     } //else
        
@@ -232,7 +250,8 @@ appointmentCtrl.controller('setAppointmentCtrl', function($scope, $ionicPopup, a
 
   $scope.appointmentVO     = appointmentVO;
   $scope.schdlFreeTime     = scheduleFactory;
-  var setAppointmentVO     = {};
+  var setAppointmentVO     = {},
+      alertPopup           = '';
 
   $scope.toggleGroup = function(day) {
     if ($scope.isGroupShown(day)) {
@@ -247,21 +266,27 @@ appointmentCtrl.controller('setAppointmentCtrl', function($scope, $ionicPopup, a
   //Seta horario escolhido para marcar a consulta.
   $scope.setChange = function(hourChk){
     setAppointmentVO._hourId = hourChk._id;
-    //console.log(setAppointmentVO);
   }
 
   $scope.hitAppoint = function(){
-    //console.log(setAppointmentVO); 
-
     //Seta usuario que vai marcar a consulta.
-    setAppointmentVO._userId = 5499544269;
+    setAppointmentVO._userId = '55e3720e46d781a2480f80e2'; //Fixo Marcelo Menegat, pegar do storagelocal
 
      ScheduleService.save(setAppointmentVO)
         .then(function(result){
-
-          console.log(result);
-
-     });
+          if(result.data){
+            if(result.data.success){
+              alertPopup = $ionicPopup.alert({
+                    title: 'Registro de Consulta',
+                    template: 'Consulta agendada com sucesso.' });
+              //Cav, altera pra pegar o retorno da mensagem "OK" e chamar e tela de 'Meus Horarios'
+            }else{
+              alertPopup = $ionicPopup.alert({
+                    title: 'Registro de Consulta',
+                    template: result.data.error  });
+            }
+          }
+      });
   }
 
 });

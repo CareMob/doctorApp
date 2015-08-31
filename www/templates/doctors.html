@@ -20,8 +20,9 @@
               <a class="item item-avatar" href="#">
                 <img src="img/user.png">
                 <h2> {{doctor.name}} {{doctor.lastname}}</h2>
-                <p>  {{doctor.doctor.contact}} </p>
-                <p>  Rating: </p>
+                <p> {{doctor.doctor.contact}} </p>                
+                {{setRate(doctor.doctor.ranking)}}                              
+                <span  ng-hide="setHidden(doctor.doctor.ranking)"> <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="null" on-leave="overStar = null"></rating></span>
               </a>
             </div>
             <i class="radio-icon ion-checkmark"></i>

@@ -1,25 +1,28 @@
-
 <ion-view view-title="Histórico">
   <ion-content>
     	<ion-list>
-    	   <div ng-repeat="day in schedule">
-	     		<ion-item  class="item-stable"
-                           ng-click="toggleGroup(day)"
-                           ng-class="{active: isGroupShown(day)}">
+     		<ion-item ng-repeat="solicitation in history">
 
-		     		<i class="icon" ng-class="isGroupShown(day) ? 'ion-minus' : 'ion-plus'"></i>
-	                &nbsp;
-			     	<span><b>Dia: </b></span>
-		       	 	<span> {{day.freeDay}} </span>
-				
-				</ion-item>
+     		<p>
+	     		<span><b>Espec: </b></span>
+	       	 	<span> {{solicitation.epeciality}} </span>
+			</p>
+			<p>
+	     		<span><b>Médico: </b></span>
+	       	 	<span> {{solicitation.doctor}} </span>
+			</p>
+			<p>
+	     		<span> {{solicitation.date}} às {{solicitation.hour}} horas </span>
+			</p>
+			<p>
+	     		<span><b>Status: </b></span>
+	       	 	<span> {{solicitation.status}} </span>
+	       	 	{{setRate(solicitation.score)}}
+     	 	    <span  ng-hide="setHidden(solicitation.status)"> <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="null" on-leave="overStar = null"></rating> </span>
+     	 	    {{setVisible(solicitation.status)}}
 
-				<ion-item class="item-accordion"
-                    ng-repeat="item in day.freeTime"
-                    ng-show="isGroupShown(day)">
-		            <h2>{{item}} </h2>
-		        </ion-item>
-			 </div>
+			</p>
+      		</ion-item>
     	</ion-list>
    	</ion-content>
  </ion-view>

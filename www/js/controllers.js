@@ -175,7 +175,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
 
 .controller('hisotryCtrl', function($scope, $ionicPopup){
 
-   /*$scope.history = [
+   $scope.history = [
      {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/08/2015' , hour: '14:30', status: 'Realizada', score: '4', id: 1 },  
      {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 03/08/2015' , hour: '14:30',  status: 'Cancelada', score: '0', id: 2 },
      {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 03/08/2015' , hour: '14:30', status: 'Agendada', score: '0', id: 3}  
@@ -201,7 +201,7 @@ angular.module('starter.controllers', ['ngAutocomplete'])
     {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
     {stateOn: 'glyphicon-heart'},
     {stateOff: 'glyphicon-off'}
-  ];*/
+  ];
 
   $scope.schedule = [];
   $scope.schedule[0]  = {
