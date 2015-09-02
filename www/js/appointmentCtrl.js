@@ -1,25 +1,23 @@
 var appointmentCtrl = angular.module('AppointmentCtrl', []);
 //var appointmentCtrl = angular.module('AppointmentCtrl', ['doctorsCtrl']);
 appointmentCtrl.factory('appointmentVO', function(){
-  var appointmentVO = {};
-  
-  appointmentVO.doctorId = "";
-  appointmentVO.doctorName = "";
-  appointmentVO.specialityId = 0;
-  appointmentVO.specialityDesc = "";
-  appointmentVO.perIni = '';
-  appointmentVO.perEnd = '';
-  appointmentVO.monthIni = 0;
-  appointmentVO.monthEnd = 0; 
-  appointmentVO.convenioId = 0;
-
+  var appointmentVO            = {};  
+      appointmentVO.doctorId       = "";
+      appointmentVO.doctorName     = "";
+      appointmentVO.specialityId   = 0;
+      appointmentVO.specialityDesc = "";
+      appointmentVO.perIni     = '';
+      appointmentVO.perEnd     = '';
+      appointmentVO.monthIni   = 0;
+      appointmentVO.monthEnd   = 0; 
+      appointmentVO.convenioId = 0;
 
   return appointmentVO;
-
 })
+
 doctorsCtrl.factory('ScheduleFactory', function(){
-  var scheduleObj = {}
-  scheduleObj.List = []
+  var scheduleObj      = {}
+      scheduleObj.List = [];
 
   scheduleObj.getList = function (){
     return scheduleObj.List;
@@ -29,19 +27,17 @@ doctorsCtrl.factory('ScheduleFactory', function(){
   }  
   scheduleObj.delList = function (){
     scheduleObj.List = []; //melhorar isso ahahha
-  }
-  
+  }  
   return scheduleObj; 
-
 })
 /* --  --*/
 appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
     var service = this,
         route = '/schedule/';
-    function getUrl(path) {                
+    function getUrl(path){
         return Doctappbknd.tableUrl + path;
     };
-    service.all = function (param) {
+    service.all = function (param){
         return $http.get(getUrl(route), {
             params: { param }
         });
@@ -52,9 +48,12 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
             params: {'specialityId' : param}
         });
     };
-    service.save = function(param) {
+    service.save = function(param){
       return $http.post(getUrl(route), param );
     };
+    service.getById = function(param){
+      return $http.get(getUrl(route+param));
+    }
 })
 
 appointmentCtrl.service('LoadingService', function($ionicLoading){
@@ -63,7 +62,8 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
   //Loading
   service.show = function() {
     $ionicLoading.show({
-      template: 'Buscando Informações...'
+      template: '<img src="/img/symbol-loader64.gif"/>' 
+        //template: 'Buscando Informações...'
     });
   };
   service.hide = function(){
@@ -245,8 +245,12 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   $scope.hitAppoint = function(){
     var setAppointmentVO    = {},
         alertPopup          = '';
+
+    //Menegat : 55e3720e46d781a2480f80e2
+    //Caverna : 55c7f83a3edd7aa419da4fc9
+    
     //Seta usuario que vai marcar a consulta.
-    setAppointmentVO._userId = '55e3720e46d781a2480f80e2'; //Fixo Marcelo Menegat, pegar do storagelocal
+    setAppointmentVO._userId = '55c7f83a3edd7aa419da4fc9'; //Fixo Marcelo Menegat, pegar do storagelocal
 
          ScheduleService.save(setAppointmentVO)
             .then(function(result){
@@ -271,8 +275,87 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
         //console.log($scope.schdlFreeTime);  
       $state.go('app.setAppointment');
   } //Function
+})
+/*------------------------------------------------------------------------------------*/
+/*--------------------------- TELA MINHAS CONSULTAS ----------------------------------*/
+/*------------------------------------------------------------------------------------*/
+appointmentCtrl.controller('SchedulesCtrl', function($scope, $ionicPopup, ScheduleService) {
 
+  $scope.ratingStates = [
+    {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
+    {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
+    {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
+    {stateOn: 'glyphicon-heart'},
+    {stateOff: 'glyphicon-off'}
+  ];
+  
+  $scope.avalueteDoctor = function() {
+      var avaluateOperation = $ionicPopup.confirm({title: 'Confirmar Avaliação?',
+                                                subTitle: 'Atribua a quantiade de estrelas ao médico conforme o atendimento recebido:',
+                                                template: '<h1><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h1>', 
+                                              cancelText: 'Cancelar',
+                                                  okText: 'Sim',
+                                              cancelType: 'button-assertive',
+                                                  okType: 'button-calm'});
+      avaluateOperation.then(function(res) {
+        
+      });
+  };  
+ 
 
+  $scope.appointmentDoNotRealized = function() {
+    var cancelOperation = $ionicPopup.confirm({title: 'Consulta não realizada?',
+                                            template: 'Ao clicar nesta opção a consulta será marcada como não realizada! Continuar?',
+                                          cancelText: 'Não',
+                                              okText: 'Sim',
+                                          cancelType: 'button-assertive',
+                                              okType: 'button-calm'});
+        cancelOperation.then(function(res) {
+      
+        });
+  };  
+
+  $scope.cancelAppointment = function() {
+    var cancelOperation = $ionicPopup.confirm({title: 'Cancelar consulta?',
+                                            template: 'Ao clicar nesta opção a consulta será cancelada, liberando o horário na agenda do médico para outro paciente! Confirmar Cancelamento?', 
+                                          cancelText: 'Não',
+                                              okText: 'Sim',
+                                          cancelType: 'button-assertive',
+                                              okType: 'button-calm'});     
+      cancelOperation.then(function(res) {
+      
+      });
+  };  
+  
+   
+  $scope.setHidden = function(type, value){
+      var currentDate     = new Date();
+          appointmentDate = new Date(value);
+          returnvisible   = true;      
+      if ( (appointmentDate < currentDate) && (type == "past")){
+          returnvisible = false; 
+      }
+      if ( (appointmentDate > currentDate) && (type == "future")){
+          returnvisible = false; 
+      }    
+      return returnvisible; 
+  }
+
+   // chamada banco
+   $scope.getAppointments = function(){
+    //Menegat : 55e3720e46d781a2480f80e2
+    //Caverna : 55c7f83a3edd7aa419da4fc9
+      //Pegar ID do localStorage
+      ScheduleService.getById('55c7f83a3edd7aa419da4fc9')
+        .then(function(result){          
+          if(result.data.length > 0){
+            $scope.schedules = result.data;          
+          }else{
+            alertPopup = $ionicPopup.alert({title: 'Informações',
+                                         template: 'Você não nenhuma consulta agendada.'  });
+          }          
+      });      
+   }   
 
 });
 

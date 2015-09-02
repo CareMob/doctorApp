@@ -1,8 +1,23 @@
-angular.module('starter.controllers', ['ngAutocomplete'])
+var starterCtrls = angular.module('starter.controllers', ['ngAutocomplete']);
 
+starterCtrls.service('appService', function($http, Doctappbknd) {
+    var service = this,
+        route = '/person/';
+    function getUrl(path){
+        return Doctappbknd.tableUrl + path;
+    };
+    service.all = function (param){
+        return $http.get(getUrl(route));
+    };    
+    service.save = function(param){
+      return $http.post(getUrl(route), param );
+    };
+    service.getById = function(param){
+      return $http.get(getUrl(route+param));
+    }
+})
 
-
-.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading) {
+starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, appService) {
   var $state = $injector.get('$state');
   var appID = '098a8991aefd43f08e8ad8b';
   var appToken = '86bda5c58db34bbf9e560cbf59ecf799a20b1307';
@@ -63,9 +78,14 @@ angular.module('starter.controllers', ['ngAutocomplete'])
                var alertPopup = $ionicPopup.alert({
                title: 'Verificação do Smartphone',
                template: 'Smartphone verificado com sucesso!' });
+               //window.localStorage['app_user_id'] = data.app_user_id;
+               saveUser(data.app_user_id);
+
+               /*
                window.localStorage['verifiedNumber'] = 'yes';   
                $state.go('app.profile'); 
                window.location.reload();
+               */
             }
          }).
          error(function(data, status, headers, config) {
@@ -146,34 +166,47 @@ angular.module('starter.controllers', ['ngAutocomplete'])
                template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
     });
 
+  } //Validate Number
+
+
+  function saveUser(userId){
+      window.localStorage['verifiedNumber'] = 'yes';   
+      var user = {'name': '',
+              'lastname': '',                  
+                'userId': window.localStorage['cellphoneNumber'], //Celular usuario/ID Medico  
+             'verfifyID': userId};
+
+      appService.save(user)
+        .then(function(result){
+          if(result.data > 0){
+              window.localStorage['userId'] = result.data._id;       
+              $state.go('app.profile'); 
+              window.location.reload();
+          }else{
+              alertPopup = $ionicPopup.alert({title: 'Alerta',
+                                           template: 'Falha ao salvar seu Usuário'  });
+          }              
+      });
   }
 
 })
 
-
-.controller('ProfileCtrl', function($scope, $stateParams) {
+starterCtrls.controller('ProfileCtrl', function($scope, $stateParams) {
   $scope.cellphoneNumber = window.localStorage['cellphoneNumber'] ;
 
 
 })
 
-
-.controller('cityCtrl', function($scope, $stateParams) {
+starterCtrls.controller('cityCtrl', function($scope, $stateParams) {
    /* Config para utilização do Autocomplete das cidades. */
   $scope.result2 = '';
   $scope.options2 = { country: 'br',
-                    types: '(cities)'};   
+                        types: '(cities)'};   
   $scope.details2 = '';
-
-
-
-  
-
-
 })
 
 
-.controller('hisotryCtrl', function($scope, $ionicPopup){
+starterCtrls.controller('hisotryCtrl', function($scope, $ionicPopup){
 
    $scope.history = [
      {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/08/2015' , hour: '14:30', status: 'Realizada', score: '4', id: 1 },  

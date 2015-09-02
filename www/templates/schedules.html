@@ -1,25 +1,26 @@
-<ion-view view-title="Meus Horários">
+<ion-view view-title="Meus Horários" ng-init="getAppointments()">
 	<ion-content>
     	<ion-list>
      		<ion-item ng-repeat="appointment in schedules">
-
-     		<p>
-	     		<span>Espec: </span>
-	       	 	<span> {{appointment.epeciality}} </span>
-			</p>
-			<p>
-	     		<span>Médico: </span>
-	       	 	<span> {{appointment.doctor}} </span>
-			</p>
-			<p>
-	     		<span> {{appointment.date}} às {{appointment.hour}} horas </span>
-			</p>
-
-			<button class="button button-assertive"  ng-hide="setHidden('past', appointment.date)" type="button"
-			ng-click="appointmentDoNotRealized()">Consulta nao realizada</button>
-            <button class="button button-calm"       ng-hide="setHidden('past', appointment.date)" type="button" ng-click="avalueteDoctor()" >Avaliar Médico</button>
-            <button class="button button-assertive"  ng-hide="setHidden('future', appointment.date)"  ng-click="cancelAppointment()" type="button">Cancelar Consulta</button>
-
+     			<div ng-repeat='scheduleTime in appointment.scheduleTime'>
+		     		<p>
+			     		<span>Espec: </span>
+			       	 	<span> {{appointment.speciality}} </span>
+					</p>
+					<p>
+			     		<span>Médico: </span>
+			       	 	<span> {{appointment.doctorName}} </span>
+					</p>
+					<p>
+			     		<span> {{appointment.date}} às {{scheduleTime.hour}} horas </span>
+					</p>
+					<button class="button button-assertive"  ng-hide="setHidden('past', appointment.date)" 
+								type="button" ng-click="appointmentDoNotRealized()">Consulta nao realizada</button>
+		            <button class="button button-calm" ng-hide="setHidden('past', appointment.date)" 
+		            			type="button" ng-click="avalueteDoctor()">Avaliar Médico</button>
+		            <button class="button button-assertive"  ng-hide="setHidden('future', appointment.date)"   
+		            			type="button" ng-click="cancelAppointment()">Cancelar Consulta</button>
+            	</div>
       		</ion-item>
     	</ion-list>
    	</ion-content>
