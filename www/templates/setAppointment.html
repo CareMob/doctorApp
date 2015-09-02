@@ -1,9 +1,11 @@
-<ion-view view-title="Seleção de horário">  
+<ion-view view-title="Seleção de horário" >  
   <ion-content>
-     <!-- {{appointmentVO}} -->
-     {{hourChk.hour}}
+     <!--{{appointmentVO}}
+     </br>
+      {{hourChk.hour}} 
+     {{schdlFreeTime}} -->
       <ion-list>      
-        <div ng-repeat="freeTime in schdlFreeTime.List">
+        <div ng-repeat="freeTime in schdlFreeTime">
             <ion-item  class="item-stable"
                               ng-click="toggleGroup(freeTime.day)"
                               ng-class="{active: isGroupShown(freeTime.day)}">
@@ -15,10 +17,7 @@
 
           <ion-item class="item-accordion item-radio"
                     ng-repeat="hourChk in freeTime.scheduleTime"
-                      ng-show="isGroupShown(freeTime.day)">     
-
-              
-
+                      ng-show="isGroupShown(freeTime.day)">
               <label class="item item-radio"  ng-click="setChange(hourChk);"> 
                 <input type="radio" name="group" >
                   <div class="item-content">

@@ -17,14 +17,16 @@ appointmentCtrl.factory('appointmentVO', function(){
   return appointmentVO;
 
 })
-doctorsCtrl.factory('scheduleFactory', function(){
+doctorsCtrl.factory('ScheduleFactory', function(){
   var scheduleObj = {}
   scheduleObj.List = []
 
+  scheduleObj.getList = function (){
+    return scheduleObj.List;
+  }
   scheduleObj.addList = function (list){
     scheduleObj.List = list;
-  }   
-
+  }  
   scheduleObj.delList = function (){
     scheduleObj.List = []; //melhorar isso ahahha
   }
@@ -36,11 +38,7 @@ doctorsCtrl.factory('scheduleFactory', function(){
 appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
     var service = this,
         route = '/schedule/';
-        //tableUrl = '/1/objects/',
-
-    function getUrl(path) {
-        //return Backand.getApiUrl() + tableUrl + path;
-        console.log("PathRoute: " + path)
+    function getUrl(path) {                
         return Doctappbknd.tableUrl + path;
     };
     service.all = function (param) {
@@ -49,17 +47,14 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
         });
     };
     service.allBySpec = function(param){
-        var docRoute = '/doctors/';        
-        console.log(getUrl(docRoute));
+        var docRoute = '/doctors/';                
         return $http.get(getUrl(docRoute), {
             params: {'specialityId' : param}
         });
     };
-
     service.save = function(param) {
       return $http.post(getUrl(route), param );
     };
-
 })
 
 appointmentCtrl.service('LoadingService', function($ionicLoading){
@@ -77,11 +72,14 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
 
 })
 //DoctorFactory
-appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, appointmentVO, scheduleFactory, ScheduleService, LoadingService) {
+appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, appointmentVO, ScheduleFactory, ScheduleService, LoadingService) {
   
-  $scope.appointmentVO = appointmentVO;
+  $scope.appointmentVO = appointmentVO;  
+  $scope.schdlFreeTime = ScheduleFactory.getList();
+
   // Form data for the Appointments
   $scope.loginData = {};
+  var _ctrl = this;
 
   /* ----------------------------------------------------------------------------------------- */
   /* ----------------------------------- RATING DEFINITION ----------------------------------- */
@@ -102,39 +100,41 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     {stateOn: 'glyphicon-heart'},
     {stateOff: 'glyphicon-off'}
   ];
-
+  /* ----------------------------------------------------------------------------------------- */
+  /* --------------------------------- AGRUPADOR ACCORDION ----------------------------------- */
+  /* ----------------------------------------------------------------------------------------- */
+  $scope.toggleGroup = function(day) {
+    if ($scope.isGroupShown(day)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = day;
+    }
+  };
+  $scope.isGroupShown = function(day) {
+    return $scope.shownGroup === day;
+  };
+  //Seta horario escolhido para marcar a consulta.
+  $scope.setChange = function(hourChk){
+    setAppointmentVO._hourId = hourChk._id;
+  }
   /* ----------------------------------------------------------------------------------------- */
   /* ----------------------------------- ZOOM DEFINITIONS ------------------------------------ */
   /* ----------------------------------------------------------------------------------------- */
-  // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/doctorsZoom.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.docZmodal = modal;
-  });
-
- // Create the login modal that we will use later
+  }); 
   $ionicModal.fromTemplateUrl('templates/doctors.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.docLmodal = modal;
   });
-
-
-  // Create the login modal that we will use later
   $ionicModal.fromTemplateUrl('templates/specialityZoom.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.specZmodal = modal;
   });
-
-    // Create the login modal that we will use later
-  /*$ionicModal.fromTemplateUrl('templates/cityZoom.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.cityZmodal = modal;
-  });*/
-
   // Triggered in the login modal to close it
   $scope.closeZoom = function(zoomId) {
     switch(zoomId){
@@ -155,7 +155,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
         $scope.specZmodal.hide();
         //console.log(zoomId);
         break;
-
     }    
   };
   // Open the doctors modal
@@ -182,19 +181,17 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     $scope.appointmentVO.specialityId   = speciality._id;
     $scope.appointmentVO.specialityDesc = speciality.description;
   };
-
   $scope.clearForm = function(){
     $scope.appointmentVO ={};
     appointmentVO = $scope.appointmentVO;
   }
-
   /**
    Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
    **/
   $scope.goToVerify = function() {
 
     //Limpa lista anterior para descartar eventuis 'lixos'
-    scheduleFactory.delList();
+    ScheduleFactory.delList();
         
     //Melhorar esse codigo ahahah 
     //appointmentVO.monthIni = /*appointmentVO.perIni.getMonth() + 1, */
@@ -210,12 +207,13 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     if(appointmentVO.doctorId != ""){
       ScheduleService.all(appointmentVO)
             .then(function (result) {
-              console.log(result.data);  
+              //console.log(result.data);  
               LoadingService.hide();    
 
               if(result.data.length > 0){
-                scheduleFactory.addList(result.data);              
-                $state.go('app.setAppointment');                      
+                ScheduleFactory.addList(result.data);              
+                //$state.go('app.setAppointment');  
+                openAppointmentFree(ScheduleFactory.getList());                    
               }else{
                 var alertPopup = $ionicPopup.alert({
                     title: 'Busca horários',
@@ -242,14 +240,47 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
             }); //then
     } //else
        
-  };  
+  };
+  // Marca consulta conforme horário selecionado.
+  $scope.hitAppoint = function(){
+    var setAppointmentVO    = {},
+        alertPopup          = '';
+    //Seta usuario que vai marcar a consulta.
+    setAppointmentVO._userId = '55e3720e46d781a2480f80e2'; //Fixo Marcelo Menegat, pegar do storagelocal
 
-})
+         ScheduleService.save(setAppointmentVO)
+            .then(function(result){
+              if(result.data){
+                if(result.data.success){
+                  alertPopup = $ionicPopup.alert({
+                        title: 'Registro de Consulta',
+                        template: 'Consulta agendada com sucesso.' });
+                  //Cav, altera pra pegar o retorno da mensagem "OK" e chamar e tela de 'Meus Horarios'
+                }else{
+                  alertPopup = $ionicPopup.alert({
+                        title: 'Registro de Consulta',
+                        template: result.data.error  });
+                }
+              }
+          });
+  }
+  // Abre tela com horários livres a escolha
+  function openAppointmentFree(scdhlFreeTime) {                
+    $scope.appointmentVO = appointmentVO,
+    $scope.schdlFreeTime = scdhlFreeTime; 
+        //console.log($scope.schdlFreeTime);  
+      $state.go('app.setAppointment');
+  } //Function
 
-appointmentCtrl.controller('setAppointmentCtrl', function($scope, $ionicPopup, appointmentVO, scheduleFactory, ScheduleService ) {
+
+
+});
+
+/*
+appointmentCtrl.controller('setAppointmentCtrl', function($scope, $ionicPopup, appointmentVO, ScheduleFactory, ScheduleService ) {
 
   $scope.appointmentVO     = appointmentVO;
-  $scope.schdlFreeTime     = scheduleFactory;
+  $scope.schdlFreeTime     = ScheduleFactory;
   var setAppointmentVO     = {},
       alertPopup           = '';
 
@@ -289,5 +320,7 @@ appointmentCtrl.controller('setAppointmentCtrl', function($scope, $ionicPopup, a
       });
   }
 
-});
+});*/
+
+
 

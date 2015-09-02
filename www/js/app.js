@@ -102,7 +102,7 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
     views: {
       'menuContent': {
         templateUrl: "templates/setAppointment.html",
-        controller: 'setAppointmentCtrl'
+        controller: "newAppointmentCtrl"        
       }
     }
   });
