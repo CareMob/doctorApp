@@ -79,7 +79,8 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 
   // Form data for the Appointments
   $scope.loginData = {};
-  var _ctrl = this;
+  var _ctrl               = this,
+      setAppointmentVO    = {};
 
   /* ----------------------------------------------------------------------------------------- */
   /* ----------------------------------- RATING DEFINITION ----------------------------------- */
@@ -243,28 +244,30 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   };
   // Marca consulta conforme horário selecionado.
   $scope.hitAppoint = function(){
-    var setAppointmentVO    = {},
-        alertPopup          = '';
+    var alertPopup          = '',
+        userId              = window.localStorage['userId'];
 
     //Menegat : 55e3720e46d781a2480f80e2
     //Caverna : 55c7f83a3edd7aa419da4fc9
     
     //Seta usuario que vai marcar a consulta.
-    setAppointmentVO._userId = '55c7f83a3edd7aa419da4fc9'; //Fixo Marcelo Menegat, pegar do storagelocal
+    setAppointmentVO._userId = userId; 
 
          ScheduleService.save(setAppointmentVO)
             .then(function(result){
               if(result.data){
-                if(result.data.success){
+                console.log(result.data)
+                //if(result.data.success){
                   alertPopup = $ionicPopup.alert({
                         title: 'Registro de Consulta',
                         template: 'Consulta agendada com sucesso.' });
+                        $state.go('app.schedules');
                   //Cav, altera pra pegar o retorno da mensagem "OK" e chamar e tela de 'Meus Horarios'
-                }else{
+                /*}else{
                   alertPopup = $ionicPopup.alert({
                         title: 'Registro de Consulta',
                         template: result.data.error  });
-                }
+                }*/
               }
           });
   }
@@ -345,8 +348,9 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $ionicPopup, Schedu
    $scope.getAppointments = function(){
     //Menegat : 55e3720e46d781a2480f80e2
     //Caverna : 55c7f83a3edd7aa419da4fc9
+    var userId = window.localStorage['userId'];
       //Pegar ID do localStorage
-      ScheduleService.getById('55c7f83a3edd7aa419da4fc9')
+      ScheduleService.getById(userId)
         .then(function(result){          
           if(result.data.length > 0){
             $scope.schedules = result.data;          

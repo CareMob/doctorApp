@@ -8,13 +8,18 @@ starterCtrls.service('appService', function($http, Doctappbknd) {
     };
     service.all = function (param){
         return $http.get(getUrl(route));
-    };    
+    };
+    service.getById = function(value){
+      return $http.get(getUrl(route+value));
+    }    
     service.save = function(param){
       return $http.post(getUrl(route), param );
     };
-    service.getById = function(param){
-      return $http.get(getUrl(route+param));
+
+    service.update = function(value, param){
+      return $http.put(getUrl(route+value), param );
     }
+
 })
 
 starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, appService) {
@@ -75,9 +80,9 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
                title: 'Verificação do Smartphone',
                template: 'Codigo de validação informado está incorreto!' });   
              } else{
-               var alertPopup = $ionicPopup.alert({
-               title: 'Verificação do Smartphone',
-               template: 'Smartphone verificado com sucesso!' });
+               //var alertPopup = $ionicPopup.alert({
+               //title: 'Verificação do Smartphone',
+               //template: 'Smartphone verificado com sucesso!' });
                //window.localStorage['app_user_id'] = data.app_user_id;
                saveUser(data.app_user_id);
 
@@ -178,13 +183,18 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 
       appService.save(user)
         .then(function(result){
-          if(result.data > 0){
-              window.localStorage['userId'] = result.data._id;       
+          console.log(result.data);          
+          if(result.data){
+              window.localStorage['userId'] = result.data._id;
+              var alertPopup = $ionicPopup.alert({title: 'Verificação do Smartphone',
+                                               template: 'Smartphone verificado com sucesso!' });                          
               $state.go('app.profile'); 
               window.location.reload();
           }else{
               alertPopup = $ionicPopup.alert({title: 'Alerta',
-                                           template: 'Falha ao salvar seu Usuário'  });
+                                           template: 'Falha ao salvar seu Usuário'});
+              // -------------- OBS -----------------
+              //Criar meio para gerar usuario no banco, caso o mesmo tenha sido validado com sucesso.
           }              
       });
   }
@@ -192,8 +202,27 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 })
 
 starterCtrls.controller('ProfileCtrl', function($scope, $stateParams) {
-  $scope.cellphoneNumber = window.localStorage['cellphoneNumber'] ;
+  $scope.user = {  '_id': window.localStorage['userId'],
+                  'name': window.localStorage['name'],
+              'lastname': window.localStorage['lastname'],    
+          'healthCareId': window.localStorage['healthCareId'],
+              //'birthday': window.localStorage['birthday'],
+                'userId': window.localStorage['cellphoneNumber']};   
 
+  $scope.updateById = function(){
+
+    window.localStorage['name']         = $scope.user.name;
+    window.localStorage['lastname']     = $scope.user.lastname;
+    window.localStorage['birthday']     = $scope.user.birthday;
+    window.localStorage['healthCareId'] = $scope.user.healthCareId;
+
+    console.log($scope.user);
+    /*appService.update($scope.user.userId, $scope.user)
+      .then(function(result){
+            //do something
+            console.log(result.data);
+      });*/
+  }
 
 })
 
