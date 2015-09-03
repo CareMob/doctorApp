@@ -38,6 +38,12 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
         return Doctappbknd.tableUrl + path;
     };
     service.all = function (param){
+        return $http.post(getUrl(route), param);
+    };
+    service.mene = function (param){
+        return $http.get(getUrl('/mene/'+param));
+    };
+    /*service.all = function (param){
         return $http.get(getUrl(route), {
             params: { param }
         });
@@ -47,9 +53,9 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
         return $http.get(getUrl(docRoute), {
             params: {'specialityId' : param}
         });
-    };
+    };*/
     service.save = function(param){
-      return $http.post(getUrl(route), param );
+      return $http.post(getUrl('/appointment/'), param );
     };
     service.getById = function(param){
       return $http.get(getUrl(route+param));
@@ -62,8 +68,8 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
   //Loading
   service.show = function() {
     $ionicLoading.show({
-      template: '<img src="/img/symbol-loader64.gif"/>' 
-        //template: 'Buscando Informações...'
+      //template: '<img src="/img/symbol-loader64.gif"/>' 
+      template: 'Buscando Informações...'
     });
   };
   service.hide = function(){
@@ -193,20 +199,15 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 
     //Limpa lista anterior para descartar eventuis 'lixos'
     ScheduleFactory.delList();
-        
-    //Melhorar esse codigo ahahah 
-    //appointmentVO.monthIni = /*appointmentVO.perIni.getMonth() + 1, */
-    //appointmentVO.monthEnd = /*appointmentVO.perEnd.getMonth() + 1; */
-
-    //delete appointmentVO['perIni'];
-    //delete appointmentVO['perEnd'];
-
-    //console.log(appointmentVO);
+    /*var perIni   = getDateApi(appointmentVO.perIni),
+        perEnd   = getDateApi(appointmentVO.perEnd),
+        urlParam = perIni+'?'+perEnd+'?'+appointmentVO.doctorId;
+    console.log(perIni);*/
     
     LoadingService.show();
     //Chama API para verificar horarios disponiveis By Doctor   
-    if(appointmentVO.doctorId != ""){
-      ScheduleService.all(appointmentVO)
+    //if(appointmentVO.doctorId != ""){
+      ScheduleService.all(appointmentVO)      
             .then(function (result) {
               //console.log(result.data);  
               LoadingService.hide();    
@@ -221,7 +222,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
                     template: 'Não existem horários disponiveis para os dados informados.' });
               }
             });
-    }else{ //Chama API para verificar horarios disponiveis By Speciality
+   /* }else{ //Chama API para verificar horarios disponiveis By Speciality
       ScheduleService.allBySpec(appointmentVO.specialityId)
             .then(function(resultDoc){
                 LoadingService.hide(); 
@@ -240,7 +241,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
                 }
             }); //then
     } //else
-       
+      */ 
   };
   // Marca consulta conforme horário selecionado.
   $scope.hitAppoint = function(){
@@ -278,6 +279,18 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
         //console.log($scope.schdlFreeTime);  
       $state.go('app.setAppointment');
   } //Function
+
+  function getDateApi(dateStamp){
+    dateStamp = new Date(dateStamp);
+    var date  = dateStamp.getDate(),
+        month = appointmentVO.perIni.getMonth() + 1,
+        year  = appointmentVO.perIni.getFullYear();          
+    if(month < 10)     
+        month = 0 +''+ month;
+
+    return date+''+month+''+year;
+  }
+
 })
 /*------------------------------------------------------------------------------------*/
 /*--------------------------- TELA MINHAS CONSULTAS ----------------------------------*/

@@ -18,7 +18,7 @@ starterCtrls.service('appService', function($http, Doctappbknd) {
 
     service.update = function(value, param){
       return $http.put(getUrl(route+value), param );
-    }
+    };
 
 })
 
@@ -80,17 +80,16 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
                title: 'Verificação do Smartphone',
                template: 'Codigo de validação informado está incorreto!' });   
              } else{
-               //var alertPopup = $ionicPopup.alert({
-               //title: 'Verificação do Smartphone',
-               //template: 'Smartphone verificado com sucesso!' });
-               //window.localStorage['app_user_id'] = data.app_user_id;
-               saveUser(data.app_user_id);
+                saveUser(data.app_user_id);
 
                /*
+               var alertPopup = $ionicPopup.alert({   title: 'Verificação do Smartphone',
+                                                     template: 'Smartphone verificado com sucesso!' });              
                window.localStorage['verifiedNumber'] = 'yes';   
                $state.go('app.profile'); 
                window.location.reload();
                */
+               
             }
          }).
          error(function(data, status, headers, config) {
@@ -179,7 +178,7 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
       var user = {'name': '',
               'lastname': '',                  
                 'userId': window.localStorage['cellphoneNumber'], //Celular usuario/ID Medico  
-             'verfifyID': userId};
+             'verfifyID': userId};     
 
       appService.save(user)
         .then(function(result){
