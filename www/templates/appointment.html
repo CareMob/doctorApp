@@ -20,7 +20,7 @@
 		<div class="spacer" style="width: 300px; height: 41px;"></div>
 
 		<!-- Populado por autocomplete e terá um modal com campo Search...ng-dblclick -->
-		<label class="item item-input ">	    			
+		<label class="item item-input item-stacked-label ">	    			
 			<span class="input-label">Médico (Opcional)</span>
 			<div>
 				<input type="text" ng-model="appointmentVO.doctorName" placeholder="Aloisio Silva (opcional)" ng-click="doctorZoom()">				
@@ -38,7 +38,7 @@
 			</label>
 		</div>
 			
-		</div>				
+					
 		<label class="item item-input  item-select">
 		    <div class="input-label" width="10em">
 		      Convênio
@@ -50,13 +50,18 @@
 		      <option>Fatíma</option>
 		    </select>
 		</label>
-		<!-- Ao clitar trazer os horarios em um modal.. -->
-		<button class="button button-block button-calm" ng-click="goToVerify()">
-  			Verificar Horários
-		</button>		
-		<button class="button button-block button-assertive" ng-click="clearForm()">
-  			Limpar Campos
-		</button>		
-	</div>
+
+		</div>	
+
+		<!--div class="list list-inset"-->
+		<div class="button-bar">					
+			<button class="button button-block button-assertive" ng-click="clearForm()">
+  				Limpar Campos
+			</button>			
+			<button class="button button-block button-calm" ng-click="goToVerify()">
+  				Verificar Horários
+			</button>
+		</div>
+	
   </ion-content>
 </ion-view>

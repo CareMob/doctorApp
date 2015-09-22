@@ -60,14 +60,15 @@ doctorsCtrl.Factory('DoctorFactory', function(){
 doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $http, DoctorService){
 	$scope.appointmentVO = appointmentVO;
 
-    var doctorsZomm = this;
+    var doctorsZomm     = this;
+    doctorsZomm.doctors = {};
 
     // Criar uma lib com isso .... :     
     String.prototype.toProperCase = function () {
         return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     };
     // =====================================================================================================================
-    function getDoctors() {
+    $scope.getDoctors = function() {
         //console.log('loading......');        
         DoctorService.all()
             .then(function (result) {                
@@ -85,8 +86,8 @@ doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $htt
             });*/                    
     }
 
-    doctorsZomm.doctors = {};   
-    getDoctors();   
+       
+    //getDoctors();   
 
 })
 

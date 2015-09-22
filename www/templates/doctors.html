@@ -1,9 +1,9 @@
 <ion-view >  
   <ion-header-bar>
      <h1 class="title">Seleciona Médico</h1>
-    <div class="buttons">
+    <!--div class="buttons">
       <button class="button button-clear" ng-click="closeZoom('dl')">Voltar</button>
-    </div>
+    </div-->
   </ion-header-bar>
   <ion-content>
     <label class="item item-input">
@@ -30,6 +30,14 @@
     
       </ion-item>
     </ion-list>
+
+    <div class="button-bar">  
+      <a class="button icon-left ion-chevron-left "   ng-click="closeZoom('dl')" >Voltar</a>
+      <a class="button icon-right ion-chevron-right " ng-click="goToVerify('dl')">Buscar horários</a>      
+    </div>
   
+
+   
+
   </ion-content>
 </ion-view>

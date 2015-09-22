@@ -47,13 +47,12 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
         return $http.get(getUrl(route), {
             params: { param }
         });
-    };
-    service.allBySpec = function(param){
-        var docRoute = '/doctors/';                
-        return $http.get(getUrl(docRoute), {
-            params: {'specialityId' : param}
-        });
     };*/
+    service.allBySpeCity = function(param){
+        var docRoute = '/doctorsByIds/' + param;                
+        return $http.get(getUrl(docRoute));
+    };
+    
     service.save = function(param){
       return $http.post(getUrl('/appointment/'), param );
     };
@@ -195,7 +194,16 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   /**
    Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
    **/
-  $scope.goToVerify = function() {
+  $scope.goToVerify = function(comeFrom) {
+
+    switch(comeFrom){
+      case 'dl':
+          //closeZoom('dl');
+           $scope.docLmodal.hide();
+          break;
+      default:
+        break;
+    }
 
     //Limpa lista anterior para descartar eventuis 'lixos'
     ScheduleFactory.delList();
@@ -206,7 +214,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
     
     LoadingService.show();
     //Chama API para verificar horarios disponiveis By Doctor   
-    //if(appointmentVO.doctorId != ""){
+    if(appointmentVO.doctorId != ""){
       ScheduleService.all(appointmentVO)      
             .then(function (result) {
               //console.log(result.data);  
@@ -222,8 +230,9 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
                     template: 'Não existem horários disponiveis para os dados informados.' });
               }
             });
-   /* }else{ //Chama API para verificar horarios disponiveis By Speciality
-      ScheduleService.allBySpec(appointmentVO.specialityId)
+    }else{ //Chama API para verificar horarios disponiveis By Speciality
+      var params = appointmentVO.specialityId + ';0';
+      ScheduleService.allBySpeCity(params)
             .then(function(resultDoc){
                 LoadingService.hide(); 
                 //Chama tela de medicos.
@@ -241,7 +250,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
                 }
             }); //then
     } //else
-      */ 
+     
   };
   // Marca consulta conforme horário selecionado.
   $scope.hitAppoint = function(){
