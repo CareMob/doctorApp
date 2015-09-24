@@ -1,17 +1,17 @@
 var doctorsCtrl = angular.module('doctorsCtrl', ['AppointmentCtrl']);
 
 doctorsCtrl.service('DoctorService', function($http, Doctappbknd) {
-    var service = this,        
-        path = '/doctors/';
+    var service = this;        
+        //path = '/doctors/';
         //tableUrl = '/1/objects/',
 
-    function getUrl() {
+    function getUrl(urlPath) {
         //return Backand.getApiUrl() + tableUrl + path;
-        return Doctappbknd.tableUrl + path;
+        return Doctappbknd.tableUrl + urlPath;
     }
 
-    service.all = function () {
-        return $http.get(getUrl());        
+    service.all = function (path) {
+        return $http.get(getUrl(path));        
         //return $http.get('http://localhost:8080/api/doctors');
     };
 
@@ -60,8 +60,9 @@ doctorsCtrl.Factory('DoctorFactory', function(){
 doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $http, DoctorService){
 	$scope.appointmentVO = appointmentVO;
 
-    var doctorsZomm     = this;
-    doctorsZomm.doctors = {};
+    var path                = '/doctors/',
+        doctorsZomm         = this;
+        doctorsZomm.doctors = {};
 
     // Criar uma lib com isso .... :     
     String.prototype.toProperCase = function () {
@@ -70,7 +71,7 @@ doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $htt
     // =====================================================================================================================
     $scope.getDoctors = function() {
         //console.log('loading......');        
-        DoctorService.all()
+        DoctorService.all(path)
             .then(function (result) {                
                 $scope.doctors = result.data;
                 //console.log('remove loading......');        
@@ -92,7 +93,7 @@ doctorsCtrl.controller('doctorsSearchZoom', function($scope, appointmentVO, $htt
 })
 
 //Realizar busca de especialidades junto ao medico
-doctorsCtrl.controller('specialitySearchZoom', function($scope, appointmentVO, $http, Doctappbknd){
+doctorsCtrl.controller('specialitySearchZoom', function($scope, appointmentVO, $http, DoctorService, Doctappbknd){
     var controller = this,
           //tableUrl = 'http://localhost:8080/api/specialities',
           //tableUrl = 'https://doctorappbknd.herokuapp.com/api/specialities',
@@ -104,12 +105,12 @@ doctorsCtrl.controller('specialitySearchZoom', function($scope, appointmentVO, $
     };
     // =====================================================================================================================
 
-    function getUrl() {
+    //function getUrl() {
         //return Backand.getApiUrl() + tableUrl + path;
-        return Doctappbknd.tableUrl + path;
-    }
-
-    controller.all = function () {
+      //  return Doctappbknd.tableUrl + path;
+    //}
+   
+    /*controller.all = function () {
         $http.get(getUrl())        
                 .success(function(data, status, headers, config) {                    
                     //console.log(data[0].name + ' - ' + data[0].doctor.speciality.description.toProperCase());
@@ -121,7 +122,24 @@ doctorsCtrl.controller('specialitySearchZoom', function($scope, appointmentVO, $
     };
 
     controller.all();
+    */
+    $scope.getSpecialities = function() {
+        //console.log('loading......');        
+        DoctorService.all(path)
+            .then(function (result) {                
+                $scope.specialities = result.data;
+                //console.log('remove loading......');        
+                //console.log(result.data);
+            });
+            /*.success(function(data, status, headers, config) {                    
+                //console.log(data);
+                doctorsZomm.doctors = data;  
+                $scope.doctors = data;
 
+            }).error(function(data, status, headers, config) {
+                 doctorsZomm.doctors = data;
+            });*/                    
+    }
 
     //var dashboard = this;
 
@@ -143,5 +161,22 @@ doctorsCtrl.controller('specialitySearchZoom', function($scope, appointmentVO, $
     }
     getSpecialities();
     */    
+
+})
+
+doctorsCtrl.controller('citySearchZoom', function($scope, appointmentVO, $http, DoctorService){
+    var controller = this,
+              path = '/city';
+
+
+    $scope.getCities = function() {
+        //console.log('loading......');        
+        DoctorService.all(path)
+            .then(function (result) {                
+                $scope.cities = result.data;
+            });                 
+    }
+
+    
 
 })

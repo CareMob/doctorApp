@@ -6,6 +6,8 @@ appointmentCtrl.factory('appointmentVO', function(){
       appointmentVO.doctorName     = "";
       appointmentVO.specialityId   = 0;
       appointmentVO.specialityDesc = "";
+      appointmentVO.cityId     = 0;
+      appointmentVO.cityDesc   = "";
       appointmentVO.perIni     = '';
       appointmentVO.perEnd     = '';
       appointmentVO.monthIni   = 0;
@@ -141,6 +143,13 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   }).then(function(modal) {
     $scope.specZmodal = modal;
   });
+  $ionicModal.fromTemplateUrl('templates/cityZoom.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.cityZmodal = modal;
+  });
+
+
   // Triggered in the login modal to close it
   $scope.closeZoom = function(zoomId) {
     switch(zoomId){
@@ -148,10 +157,9 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
         $scope.docZmodal.hide();      
         //console.log(zoomId);
         break;  
-      /*case "ct":
-        $scope.cityZmodal.hide();
-        //console.log(zoomId);
-        break;*/
+      case "ct":
+        $scope.cityZmodal.hide();        
+        break;
       case "sp":  
         $scope.specZmodal.hide();
         break;
@@ -186,6 +194,10 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   $scope.setSpecChoice = function(speciality){
     $scope.appointmentVO.specialityId   = speciality._id;
     $scope.appointmentVO.specialityDesc = speciality.description;
+  };
+  $scope.setCityChoice = function(city){
+    $scope.appointmentVO.cityId   = city.city_ibge;
+    $scope.appointmentVO.cityDesc = city.description;
   };
   $scope.clearForm = function(){
     $scope.appointmentVO ={};
@@ -231,7 +243,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
               }
             });
     }else{ //Chama API para verificar horarios disponiveis By Speciality
-      var params = appointmentVO.specialityId + ';0';
+      var params = appointmentVO.specialityId + ';' + appointmentVO.cityId;
       ScheduleService.allBySpeCity(params)
             .then(function(resultDoc){
                 LoadingService.hide(); 

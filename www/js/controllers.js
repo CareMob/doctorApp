@@ -1,4 +1,6 @@
-var starterCtrls = angular.module('starter.controllers', ['ngAutocomplete']);
+var starterCtrls = angular.module('starter.controllers', []);
+
+//'ngAutocomplete'
 
 starterCtrls.service('appService', function($http, Doctappbknd) {
     var service = this,
