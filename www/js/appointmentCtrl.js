@@ -42,25 +42,26 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
     service.all = function (param){
         return $http.post(getUrl(route), param);
     };
-    service.mene = function (param){
-        return $http.get(getUrl('/mene/'+param));
-    };
-    /*service.all = function (param){
-        return $http.get(getUrl(route), {
-            params: { param }
-        });
-    };*/
+    
     service.allBySpeCity = function(param){
         var docRoute = '/doctorsByIds/' + param;                
         return $http.get(getUrl(docRoute));
+    };
+    service.getById = function(param){
+      return $http.get(getUrl(route+param));
     };
     
     service.save = function(param){
       return $http.post(getUrl('/appointment/'), param );
     };
-    service.getById = function(param){
-      return $http.get(getUrl(route+param));
-    }
+    service.update = function(param){
+      return $http.put(getUrl('/appointment/'), param);
+    };
+
+    service.mene = function (param){
+        return $http.get(getUrl('/mene/'+param));
+    };  
+    
 })
 
 appointmentCtrl.service('LoadingService', function($ionicLoading){
@@ -197,16 +198,68 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
   };
   $scope.setCityChoice = function(city){
     $scope.appointmentVO.cityId   = city.city_ibge;
-    $scope.appointmentVO.cityDesc = city.description;
+    $scope.appointmentVO.cityDesc = city.description + ' - ' + city.state;
   };
   $scope.clearForm = function(){
     $scope.appointmentVO ={};
     appointmentVO = $scope.appointmentVO;
   }
+
+  function verifyData(){
+    
+    if ((appointmentVO.perIni == "") || (appointmentVO.perEnd == "")){
+      var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'É obrigatorio a informação do período inicial e final para realização da consulta!'  });   
+        return false;
+    }
+    
+    if (appointmentVO.doctorId == ""){
+    if ((appointmentVO.specialityId == "") || (appointmentVO.cityId == "")) {
+     
+     var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'É obrigatorio a informação do "medico" ou "especialidade + cidade!"'  });   
+       return false;      
+    }}
+    
+    dataInicial = new Date(appointmentVO.perIni);
+    dataFinal   = new Date(appointmentVO.perEnd);
+    today       = new Date();
+    
+    if (dataInicial > dataFinal){
+      var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'Data Final deve ser maior do que a Data Inicial!'  });   
+       return false;      
+    }
+   
+    if (   (dataInicial.getMonth() != dataFinal.getMonth())
+      || (dataInicial.getFullYear() != dataFinal.getFullYear())) {
+      var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'Período Inicial e Final deve estar contido dentro do mesmo mês!'  });   
+       return false; 
+    }
+    
+    if ((today >= dataInicial)){
+       var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'Período Inicial deve ser maior do que o dia atual!'  });   
+       return false; 
+    }
+    
+      
+    return true;
+  }
   /**
    Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
    **/
   $scope.goToVerify = function(comeFrom) {
+
+    if (!verifyData()){
+      return;
+    }
 
     switch(comeFrom){
       case 'dl':
@@ -316,7 +369,17 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 /*------------------------------------------------------------------------------------*/
 /*--------------------------- TELA MINHAS CONSULTAS ----------------------------------*/
 /*------------------------------------------------------------------------------------*/
-appointmentCtrl.controller('SchedulesCtrl', function($scope, $ionicPopup, ScheduleService) {
+appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup, ScheduleService) {
+
+  var param = {};
+  /* -------------- Status ------------|
+  | Cod | Desc          | by who?      |
+  |  00 | marcada       | Admin/user   |
+  |  01 | Confirmada    | Admin        |
+  |  02 | Cancelada     | User         |
+  |  03 | Realizada     | User/Admin   | 
+  |  04 | Não Realizada | User/Admin   |
+  |------------------------------------|*/
 
   $scope.ratingStates = [
     {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
@@ -326,7 +389,8 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $ionicPopup, Schedu
     {stateOff: 'glyphicon-off'}
   ];
   
-  $scope.avalueteDoctor = function() {
+  //Avaliar consulta/Medico
+  $scope.avalueteDoctor = function(appointment) {
       var avaluateOperation = $ionicPopup.confirm({title: 'Confirmar Avaliação?',
                                                 subTitle: 'Atribua a quantiade de estrelas ao médico conforme o atendimento recebido:',
                                                 template: '<h1><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h1>', 
@@ -335,12 +399,24 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $ionicPopup, Schedu
                                               cancelType: 'button-assertive',
                                                   okType: 'button-calm'});
       avaluateOperation.then(function(res) {
+
+        param = {_hourId: appointment._id,
+                  status: 03, //Realizada
+                  rating: $scope.rate};
+
+        ScheduleService.update(param)
+          .then(function(result){
+
+              console.log(result.data);
+
+            });
         
       });
   };  
  
-
-  $scope.appointmentDoNotRealized = function() {
+  // Setar como não realizada
+  $scope.appointmentDoNotRealized = function(appointment) {
+    
     var cancelOperation = $ionicPopup.confirm({title: 'Consulta não realizada?',
                                             template: 'Ao clicar nesta opção a consulta será marcada como não realizada! Continuar?',
                                           cancelText: 'Não',
@@ -348,11 +424,23 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $ionicPopup, Schedu
                                           cancelType: 'button-assertive',
                                               okType: 'button-calm'});
         cancelOperation.then(function(res) {
+
+          param = {_hourId: appointment._id,
+                   status : 04}; //Nao Realizada
+
+          ScheduleService.update(param)
+            .then(function(result){
+
+                console.log(result.data);
+
+            });
+
       
         });
   };  
-
-  $scope.cancelAppointment = function() {
+ 
+ // Cancelamento de consulta
+  $scope.cancelAppointment = function(appointment) {
     var cancelOperation = $ionicPopup.confirm({title: 'Cancelar consulta?',
                                             template: 'Ao clicar nesta opção a consulta será cancelada, liberando o horário na agenda do médico para outro paciente! Confirmar Cancelamento?', 
                                           cancelText: 'Não',
@@ -360,7 +448,20 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $ionicPopup, Schedu
                                           cancelType: 'button-assertive',
                                               okType: 'button-calm'});     
       cancelOperation.then(function(res) {
-      
+
+        param = {_hourId: appointment._id,
+                status : 02}; //cancelada
+
+        //console.log(appointment);
+
+        ScheduleService.update(param)
+          .then(function(result){
+
+              //console.log(result.data);
+              $state.go($state.current, {}, {reload: true});
+
+          });
+
       });
   };  
   
