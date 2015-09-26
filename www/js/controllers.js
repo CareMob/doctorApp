@@ -236,75 +236,7 @@ starterCtrls.controller('cityCtrl', function($scope, $stateParams) {
 })
 
 
-starterCtrls.controller('hisotryCtrl', function($scope, $ionicPopup){
 
-   $scope.history = [
-     {epeciality: 'Pisiquiatria', doctor: 'Rodolfo Pipe Variani Mussato', date: 'Segunda, 03/08/2015' , hour: '14:30', status: 'Realizada', score: '4', id: 1 },  
-     {epeciality: 'Gastro', doctor: 'Mauricio Faoro',  date: 'Quinta , 03/08/2015' , hour: '14:30',  status: 'Cancelada', score: '0', id: 2 },
-     {epeciality: 'Clinico', doctor: 'Marcelo Menegat',  date: 'Segunda, 03/08/2015' , hour: '14:30', status: 'Agendada', score: '0', id: 3}  
-    ];
-
-  $scope.max = 5;
-
-  $scope.setRate = function(value){
-    $scope.rate = value;
-  }
-
-  $scope.setHidden = function(value){
-    if(value == "Realizada") {return false;}
-    else {return true;}    
-
-  }
-  $scope.isReadonly = true;
-
-
-  $scope.ratingStates = [
-    {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
-    {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
-    {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
-    {stateOn: 'glyphicon-heart'},
-    {stateOff: 'glyphicon-off'}
-  ];
-
-  $scope.schedule = [];
-  $scope.schedule[0]  = {
-     freeDay : 1,
-     freeTime : []
-  };
-  $scope.schedule[0].freeTime.push("14:30");
-  $scope.schedule[0].freeTime.push("15:30");
-  $scope.schedule[0].freeTime.push("16:30");
-
-  $scope.schedule[1]  = {
-     freeDay : 8,
-     freeTime : []
-  };
-  $scope.schedule[1].freeTime.push("08:30");
-  $scope.schedule[1].freeTime.push("09:30");
-
-  $scope.schedule[2]  = {
-     freeDay : 15,
-     freeTime : []
-  };
-  $scope.schedule[2].freeTime.push("08:50");
-  $scope.schedule[2].freeTime.push("09:40");
- 
-
-
-   $scope.toggleGroup = function(day) {
-    if ($scope.isGroupShown(day)) {
-      $scope.shownGroup = null;
-    } else {
-      $scope.shownGroup = day;
-    }
-  };
-  $scope.isGroupShown = function(day) {
-    return $scope.shownGroup === day;
-  };
-  
-
-
-});
 
 
 

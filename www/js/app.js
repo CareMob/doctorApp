@@ -14,8 +14,8 @@ angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'Appoin
   });
 })
 .constant('Doctappbknd', {
-  //tableUrl: 'https://doctorappbknd.herokuapp.com/api'
-  tableUrl: 'http://localhost:8080/api'
+  tableUrl: 'https://doctorappbknd.herokuapp.com/api'
+  //tableUrl: 'http://localhost:8080/api'
 })
 
 .config(function($stateProvider, $urlRouterProvider) {

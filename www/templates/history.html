@@ -1,6 +1,49 @@
-<ion-view view-title="Histórico">
+<ion-view view-title="Histórico" ng-init="getHistory()">
   <ion-content>
-    	<ion-list>
+  		<ion-item ng-repeat="appointment in history">
+     			<div class="card">
+	     			<div ng-repeat='scheduleTime in appointment.scheduleTime'>
+	     				<div class="item item-text-wrap">
+						    <p>
+				     		<span>Espec: </span>
+				       	 	<span> {{appointment.speciality}} </span>
+							</p>
+							<p>
+					     		<span>Médico: </span>
+					       	 	<span> {{appointment.doctorName}} </span>
+							</p>
+							<p>
+					     		<span> Quando: Dia {{appointment.screenDate}} às {{scheduleTime.hour}} horas </span>
+							</p>
+						</div>
+						<div class="item item-divider">
+							<p>
+					     		<span><b>Status: </b></span>
+					       	 	<span> {{statusEnum.props[scheduleTime.status].description}} </span>
+					       	 	{{setRate(scheduleTime.ranking)}}
+				     	 	    <span  ng-hide="setHidden(scheduleTime.status)"> <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="null" on-leave="overStar = null"></rating> </span>
+				     	 	    {{setVisible(scheduleTime.status)}}
+
+							</p>
+						</div>
+						<!--div class="item item-divider">
+						    <div class="button-bar">
+								<button class="button button-small button-assertive" 
+										ng-hide="setHidden('past', appointment.date)" 
+										type="button" ng-click="appointmentDoNotRealized(scheduleTime)">Consulta nao realizada</button>
+					            <button class="button button-small button-calm" 
+					            		ng-hide="setHidden('past', appointment.date)"
+					            		type="button" ng-click="avalueteDoctor(scheduleTime)">Avaliar Médico</button>
+					            <button class="button button-small button-assertive"  
+					            		ng-hide="setHidden('future', appointment.date)"
+				            			type="button" ng-click="cancelAppointment(scheduleTime)">Desmarcar Consulta</button>
+			            	</div>
+						</div-->			     		
+	            	</div>
+            	</div>
+      		</ion-item>
+
+    	<!--ion-list>
      		<ion-item ng-repeat="solicitation in history">
 
      		<p>
@@ -22,7 +65,10 @@
      	 	    {{setVisible(solicitation.status)}}
 
 			</p>
-      		</ion-item>
-    	</ion-list>
+      		</ion-item-->
+    	</ion-list>    	
+		<div class="bar bar-footer">     
+      		<button class="button button-block button-stable" ng-click="getHistory()">Atualizar</button>
+    	</div>
    	</ion-content>
  </ion-view>

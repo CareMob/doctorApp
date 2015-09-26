@@ -42,14 +42,19 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
     service.all = function (param){
         return $http.post(getUrl(route), param);
     };
+    service.getById = function(param){
+      return $http.get(getUrl(route+param));
+    };
+    service.getHistoryById = function(param){
+      var histRoute = '/scheduleold/' + param;
+      return $http.get(getUrl(histRoute));
+    };
     
     service.allBySpeCity = function(param){
         var docRoute = '/doctorsByIds/' + param;                
         return $http.get(getUrl(docRoute));
     };
-    service.getById = function(param){
-      return $http.get(getUrl(route+param));
-    };
+    
     
     service.save = function(param){
       return $http.post(getUrl('/appointment/'), param );
@@ -495,6 +500,71 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
           }          
       });      
    }   
+
+})
+
+starterCtrls.controller('hisotryCtrl', function($scope, $ionicPopup, ScheduleService){
+
+  $scope.statusEnum = {HIT: 0,
+          CONFIRMED: 1,
+           CANCELED: 2,
+           REALIZED: 3,
+        NOTREALIZED: 4, 
+         props: {
+            0: {description: "Marcada",       value: 0, code: "H"},
+            1: {description: "Confirmada",    value: 1, code: "C"},
+            2: {description: "Cancelada",     value: 2, code: "D"},
+            3: {description: "Realizada",     value: 3, code: "R"},
+            4: {description: "Não Realizada", value: 4, code: "N"}
+          }
+  };
+   
+  $scope.max = 5;
+
+  $scope.setRate = function(value){
+    $scope.rate = value;
+  }
+  $scope.setHidden = function(value){
+    if(value != 2 || value != 4) {return false;}
+    else {return true;}    
+
+  }
+  $scope.toggleGroup = function(day) {
+    if ($scope.isGroupShown(day)) {
+      $scope.shownGroup = null;
+    } else {
+      $scope.shownGroup = day;
+    }
+  }
+  $scope.isGroupShown = function(day) {
+    return $scope.shownGroup === day;
+  }
+
+  $scope.isReadonly = true;
+
+  $scope.ratingStates = [
+    {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
+    {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
+    {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
+    {stateOn: 'glyphicon-heart'},
+    {stateOff: 'glyphicon-off'}
+  ];
+
+  $scope.getHistory = function(){
+    //Menegat : 55e3720e46d781a2480f80e2
+    //Caverna : 55c7f83a3edd7aa419da4fc9
+    var userId = window.localStorage['userId'];
+      //Pegar ID do localStorage
+      ScheduleService.getHistoryById(userId)
+        .then(function(result){          
+          if(result.data.length > 0){
+            $scope.history = result.data;            
+          }else{
+            alertPopup = $ionicPopup.alert({title: 'Informações',
+                                         template: 'Você não nenhuma consultas em histórico.'  });
+          }          
+      });      
+   }
 
 });
 
