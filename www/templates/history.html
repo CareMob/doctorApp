@@ -1,5 +1,5 @@
 <ion-view view-title="Histórico" ng-init="getHistory()">
-  <ion-content>
+  <ion-content>  		
   		<ion-item ng-repeat="appointment in history">
      			<div class="card">
 	     			<div ng-repeat='scheduleTime in appointment.scheduleTime'>
@@ -25,50 +25,14 @@
 				     	 	    {{setVisible(scheduleTime.status)}}
 
 							</p>
-						</div>
-						<!--div class="item item-divider">
-						    <div class="button-bar">
-								<button class="button button-small button-assertive" 
-										ng-hide="setHidden('past', appointment.date)" 
-										type="button" ng-click="appointmentDoNotRealized(scheduleTime)">Consulta nao realizada</button>
-					            <button class="button button-small button-calm" 
-					            		ng-hide="setHidden('past', appointment.date)"
-					            		type="button" ng-click="avalueteDoctor(scheduleTime)">Avaliar Médico</button>
-					            <button class="button button-small button-assertive"  
-					            		ng-hide="setHidden('future', appointment.date)"
-				            			type="button" ng-click="cancelAppointment(scheduleTime)">Desmarcar Consulta</button>
-			            	</div>
-						</div-->			     		
+						</div>			     		
 	            	</div>
             	</div>
       		</ion-item>
+    	</ion-list>  
 
-    	<!--ion-list>
-     		<ion-item ng-repeat="solicitation in history">
-
-     		<p>
-	     		<span><b>Espec: </b></span>
-	       	 	<span> {{solicitation.epeciality}} </span>
-			</p>
-			<p>
-	     		<span><b>Médico: </b></span>
-	       	 	<span> {{solicitation.doctor}} </span>
-			</p>
-			<p>
-	     		<span> {{solicitation.date}} às {{solicitation.hour}} horas </span>
-			</p>
-			<p>
-	     		<span><b>Status: </b></span>
-	       	 	<span> {{solicitation.status}} </span>
-	       	 	{{setRate(solicitation.score)}}
-     	 	    <span  ng-hide="setHidden(solicitation.status)"> <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="null" on-leave="overStar = null"></rating> </span>
-     	 	    {{setVisible(solicitation.status)}}
-
-			</p>
-      		</ion-item-->
-    	</ion-list>    	
-		<div class="bar bar-footer">     
-      		<button class="button button-block button-stable" ng-click="getHistory()">Atualizar</button>
-    	</div>
    	</ion-content>
+   	<div class="bar bar-footer">     
+      		<button class="button button-stable" ng-click="getHistory()">Atualizar</button>
+    </div>
  </ion-view>
