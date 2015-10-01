@@ -17,6 +17,28 @@ appointmentCtrl.factory('appointmentVO', function(){
   return appointmentVO;
 })
 
+appointmentCtrl.factory('Appointments', function(){
+  var Appointments = {}
+      Appointments.data = []; 
+
+
+  Appointments.getList = function(){
+    return Appointments.data;
+  }
+  Appointments.addList = function(list){
+    Appointments.data = list;
+  }
+  Appointments.delItem = function(hIndex, dIndex){
+        //Elimina horario da lista
+    Appointments.data[dIndex].scheduleTime.splice(hIndex,1);
+    //Verifica se existe algum horario para o dia, caso não elimina o dia da lista tbm.
+    if(Appointments.data[dIndex].scheduleTime.length == 0){
+      Appointments.data.splice(dIndex, 1);
+    }
+  }
+  return Appointments;
+})
+
 doctorsCtrl.factory('ScheduleFactory', function(){
   var scheduleObj      = {}
       scheduleObj.List = [];
@@ -24,7 +46,7 @@ doctorsCtrl.factory('ScheduleFactory', function(){
   scheduleObj.getList = function (){
     return scheduleObj.List;
   }
-  scheduleObj.addList = function (list){
+  scheduleObj.addList = function(list){
     scheduleObj.List = list;
   }  
   scheduleObj.delList = function (){
@@ -374,7 +396,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 /*------------------------------------------------------------------------------------*/
 /*--------------------------- TELA MINHAS CONSULTAS ----------------------------------*/
 /*------------------------------------------------------------------------------------*/
-appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup, ScheduleService) {
+appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup, ScheduleService, Appointments) {
 
   var param = {};
   /* -------------- Status ------------|
@@ -395,7 +417,7 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
   ];
   
   //Avaliar consulta/Medico
-  $scope.avalueteDoctor = function(appointment) {
+  $scope.avalueteDoctor = function(hIndex, dIndex) {
       var avaluateOperation = $ionicPopup.confirm({title: 'Confirmar Avaliação?',
                                                 subTitle: 'Atribua a quantiade de estrelas ao médico conforme o atendimento recebido:',
                                                 template: '<h1><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h1>', 
@@ -405,17 +427,19 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
                                                   okType: 'button-calm'});
       avaluateOperation.then(function(res) {
 
-        param = {_hourId: appointment._id,
-                  status: 03, //Realizada
-                  rating: $scope.rate};
+        //param = {_hourId: appointment._id,
+        //          status: 03, //Realizada
+        //          rating: $scope.rate};
 
-        ScheduleService.update(param)
+        Appointments.delItem(hIndex, dIndex);
+
+        /*ScheduleService.update(param)
           .then(function(result){
 
               console.log(result.data);
 
             });
-        
+        */
       });
   };  
  
@@ -445,7 +469,7 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
   };  
  
  // Cancelamento de consulta
-  $scope.cancelAppointment = function(appointment) {
+  $scope.cancelAppointment = function(hIndex, dIndex) {
     var cancelOperation = $ionicPopup.confirm({title: 'Cancelar consulta?',
                                             template: 'Ao clicar nesta opção a consulta será cancelada, liberando o horário na agenda do médico para outro paciente! Confirmar Cancelamento?', 
                                           cancelText: 'Não',
@@ -454,18 +478,27 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
                                               okType: 'button-calm'});     
       cancelOperation.then(function(res) {
 
-        param = {_hourId: appointment._id,
-                status : 02}; //cancelada
+        //param = {_hourId: appointment._id,
+                //status : 02}; //cancelada
+       // debugger;
 
-        //console.log(appointment);
+        //Elimina horario da lista
+        /*Appointments.data[dIndex].scheduleTime.splice(hIndex,1);
+        //Verifica se existe algum horario para o dia, caso não elimina o dia da lista tbm.
+        if(Appointments.data[dIndex].scheduleTime.length == 0){
+          Appointments.data.splice(dIndex, 1);
+        }*/
 
-        ScheduleService.update(param)
+        Appointments.delItem(hIndex, dIndex);
+
+        /*ScheduleService.update(param)
           .then(function(result){
-
               //console.log(result.data);
+
+              $scope.schedules
               $state.go($state.current, {}, {reload: true});
 
-          });
+          });*/
 
       });
   };  
@@ -493,7 +526,9 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
       ScheduleService.getById(userId)
         .then(function(result){          
           if(result.data.length > 0){
-            $scope.schedules = result.data;          
+            Appointments.addList(result.data); 
+            $scope.schedules     = Appointments.getList(); // result.data;          
+            //console.log(Appointments.getList());
           }else{
             alertPopup = $ionicPopup.alert({title: 'Informações',
                                          template: 'Você não nenhuma consulta agendada.'  });
