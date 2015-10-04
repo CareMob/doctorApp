@@ -283,6 +283,10 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
    Chama tela de disponibilidade de horarios de acordo com os parametros introduzidos na tela de Nova Consulta
    **/
   $scope.goToVerify = function(comeFrom) {
+	
+    if (!verifyData()){
+		return;
+	}
 
     if (!verifyData()){
       return;
@@ -390,6 +394,54 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
         month = 0 +''+ month;
 
     return date+''+month+''+year;
+  }
+  
+  function verifyData(){
+	  
+	  if ((appointmentVO.perIni == "") || (appointmentVO.perEnd == "")){
+		  var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'É obrigatorio a informação do período inicial e final para realização da consulta!'  });   
+	      return false;
+	  }
+	  
+	  if (appointmentVO.doctorId == ""){
+		if ((appointmentVO.specialityId == "") || (appointmentVO.cityId == "")) {
+		 
+		 var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'É obrigatorio a informação do "medico" ou "especialidade + cidade!"'  });   
+	     return false;  	  
+	  }}
+	  
+	  dataInicial = new Date(appointmentVO.perIni);
+	  dataFinal   = new Date(appointmentVO.perEnd);
+	  today       = new Date();
+	  
+	  if (dataInicial > dataFinal){
+		  var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'Data Final deve ser maior do que a Data Inicial!'  });   
+	     return false; 	 	  
+	  }
+	 
+	  if (   (dataInicial.getMonth() != dataFinal.getMonth())
+		  || (dataInicial.getFullYear() != dataFinal.getFullYear())) {
+		  var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'Período Inicial e Final deve estar contido dentro do mesmo mês!'  });   
+	     return false; 
+	  }
+	  
+	  if ((today >= dataInicial)){
+		   var alertPopup = $ionicPopup.alert({
+              title: 'Busca Médicos',
+              template: 'Período Inicial deve ser maior do que o dia atual!'  });   
+	     return false; 
+	  }
+	  
+	 	  
+	  return true;
   }
 
 })
