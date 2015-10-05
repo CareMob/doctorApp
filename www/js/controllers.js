@@ -18,8 +18,8 @@ starterCtrls.service('appService', function($http, Doctappbknd) {
       return $http.post(getUrl(route), param );
     };
 
-    service.update = function(value, param){
-      return $http.put(getUrl(route+value), param );
+    service.update = function(valueId, param){
+      return $http.put(getUrl(route+valueId), param );
     };
 
 })
@@ -299,44 +299,62 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 
 })
 
-starterCtrls.controller('ProfileCtrl', function($scope, $stateParams) {
+starterCtrls.controller('ProfileCtrl', function($scope, $ionicLoading, $ionicPopup, $stateParams) {
+
+  $scope.hInsuranceList = [{'code': '1', 'name': 'Particular'}, 
+                           {'code': '2', 'name': 'Circulo Operário'},
+                           {'code': '3', 'name': 'Fátima'},
+                           {'code': '4', 'name': 'IPAM'},
+                           {'code': '5', 'name': 'Unimed'}];
+
   $scope.user = {  '_id': window.localStorage['userId'],
                   'name': window.localStorage['name'],
               'lastname': window.localStorage['lastname'],    
           'healthCareId': window.localStorage['healthCareId'],
+       'healthInsurance': window.localStorage['healthInsurance'],
               //'birthday': window.localStorage['birthday'],
                 'userId': window.localStorage['cellphoneNumber']};   
 
   $scope.updateById = function(){
 
-    window.localStorage['name']         = $scope.user.name;
-    window.localStorage['lastname']     = $scope.user.lastname;
-    window.localStorage['birthday']     = $scope.user.birthday;
-    window.localStorage['healthCareId'] = $scope.user.healthCareId;
+    $scope.show("Atualizando Usuário!");
 
-    console.log($scope.user);
-    /*appService.update($scope.user.userId, $scope.user)
+    window.localStorage['name']            = $scope.user.name;
+    window.localStorage['lastname']        = $scope.user.lastname;
+    window.localStorage['birthday']        = $scope.user.birthday;
+    window.localStorage['healthCareId']    = $scope.user.healthCareId;
+    window.localStorage['healthInsurance'] = $scope.user.healthInsurance;
+
+    $scope.hide();
+
+    //console.log($scope.user);
+    /*var alertPopup = $ionicPopup.alert({
+                    title: 'Perfil',
+                    template: 'Perfil atualizado com sucesso!' });*/
+    appService.update($scope.user.userId, $scope.user)
       .then(function(result){
             //do something
-            console.log(result.data);
-      });*/
-  }
+            $scope.hide();
+            var alertPopup = $ionicPopup.alert({
+                    title: 'Perfil',
+                    template: 'Perfil atualizado com sucesso!' });
+            //console.log(result.data);
+      });
+  };
+  $scope.show = function(message) {
+    $ionicLoading.show({
+      template: message
+    });
+  };
+  $scope.hide = function(){
+    $ionicLoading.hide();
+  };
+
+
+
+
 
 })
-
-starterCtrls.controller('cityCtrl', function($scope, $stateParams) {
-   /* Config para utilização do Autocomplete das cidades. */
-  $scope.result2 = '';
-  $scope.options2 = { country: 'br',
-                        types: '(cities)'};   
-  $scope.details2 = '';
-})
-
-
-
-
-
-
 
 // ';' apenas no final de todos os metodos :) 
 

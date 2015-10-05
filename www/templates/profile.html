@@ -21,13 +21,10 @@
 		    <div class="input-label" width="10em">
 		      Convênio
 		    </div>
-		    <select>
-		      <option selected>Particular</option>
-		      <option>Unimed</option>
-		      <option>Circulo</option>
-		      <option>IPAM</option>
-		      <option>Fatíma</option>
-		    </select>
+		    <select ng-options="hIsurance.code as hIsurance.name for hIsurance in hInsuranceList" ng-model="user.healthInsurance">
+   				<option style="display:none" value="">Selecione seu convênio</option>
+			</select>
+		    <!--p>Convenio Selecionado: {{user.healthInsurance}}</p-->
 		</label>
 		 <label class="item item-input item-stacked-label">
 		    <span class="input-label">Carteira</span>
