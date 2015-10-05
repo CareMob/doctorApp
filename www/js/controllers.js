@@ -24,14 +24,79 @@ starterCtrls.service('appService', function($http, Doctappbknd) {
 
 })
 
-starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, appService) {
+starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, $timeout, appService) {
   var $state = $injector.get('$state');
-  var appID = '098a8991aefd43f08e8ad8b';
-  var appToken = '86bda5c58db34bbf9e560cbf59ecf799a20b1307';
+  var checkmobiUrl = 'https://api.checkmobi.com/v1/';
+  var checkmobiKey = '979DEBE2-90E5-4A66-8B61-18140A07DA67';
+  $scope.counter = 25;
+  var mytimeout = null; 
+  
+  $scope.onTimeout = function() {
+	  if($scope.counter == 0) {
+		$scope.hide();
+        $scope.$broadcast('timer-stopped', 0);
+        $timeout.cancel(mytimeout);
+		$scope.hasRecivedCall();
+	    return;
+     }
+	 
+	 $scope.showTimer(  'Você receberá uma ligação dentro de alguns instantes...<br/>'
+	                 + '<b>Não Atenda</b> a ligação. Apenas aguarde:' ,  $scope.counter);
+	 
+     $scope.counter--;   
+	  	  
+     mytimeout = $timeout($scope.onTimeout, 1000);
+   };
+      
+   
+   $scope.startTimer = function() {
+        mytimeout = $timeout($scope.onTimeout, 1000);
+    };
+    // stops and resets the current timer
+    $scope.stopTimer = function() {
+        $scope.$broadcast('timer-stopped', $scope.counter);
+        $scope.counter = 25;
+        $timeout.cancel(mytimeout);
+    };
+    // triggered, when the timer stops, you can do something here, maybe show a visual indicator or vibrate the device
+    $scope.$on('timer-stopped', function(event, remaining) {
+        if(remaining === 0) {
+            console.log('your time ran out!');
+        }
 
+    }); 
+	
+  $scope.hasRecivedCall = function(){
+     var call = $ionicPopup.confirm({title: 'Validação do Smartphone',
+                                  template: 'A chamada foi recebida com sucesso?',
+                                    okText: 'Sim',
+							    cancelText: 'Não',
+                                    okType: 'button-calm',
+								cancelType: 'button-assertive' });
+     call.then(function(res) {
+		 if (res == false){
+						 
+			 var alertPopup = $ionicPopup.alert({
+                              title: 'Verificação do Smartphone',
+			 template: 'Será enviado um SMS com código de verificação para seu smartphone!'});
+			 $scope.checkNumberBySms();
+		 }
+     });
+        
+  }	
+	
+  $scope.showTimer = function(message, timer) {
+	message = message + '<h2>' + timer + '(s)<\h2>';
+	$ionicLoading.show({
+      template: message
+    });
+  };
+  
 
   $scope.show = function(message) {
-    $ionicLoading.show({
+	message = message;
+	  
+	$ionicLoading.show({
       template: message
     });
   };
@@ -41,7 +106,7 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 
   $scope.cellphoneNumber = '';
   $scope.cellphoneNumberValidation = window.localStorage['cellphoneNumber'] ;
-  $scope.doctorAppNumber = window.localStorage['otp_start'] + 'XXXXX';
+  $scope.doctorAppNumber = '0000' + window.localStorage['prefix_checkmobi'] + 'XXXXX';
   $scope.code = '';
 
   if (window.localStorage['verifiedNumber'] == 'yes'){
@@ -66,115 +131,147 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
     target: '#/app/profile'
   },
 ];
-  
-  $scope.validateCode = function(code) {
-     $scope.show('Validando Informações...');
-     url = 'https://www.cognalys.com/api/v1/otp/confirm/?app_id=' + appID
-         + '&access_token=' + appToken
-         + '&keymatch=' + window.localStorage['keymatch'] 
-         + '&otp=' + window.localStorage['otp_start'] + code;
 
-     $http.get(url).
-        success(function(data, status, headers, config) {
-          $scope.hide();
-         if (data.status == 'fajiled'){
-            var alertPopup = $ionicPopup.alert({
-               title: 'Verificação do Smartphone',
-               template: 'Codigo de validação informado está incorreto!' });   
-             } else{
-                saveUser(data.app_user_id);
-
-               /*
-               var alertPopup = $ionicPopup.alert({   title: 'Verificação do Smartphone',
-                                                     template: 'Smartphone verificado com sucesso!' });              
-               window.localStorage['verifiedNumber'] = 'yes';   
-               $state.go('app.profile'); 
-               window.location.reload();
-               */
-               
-            }
-         }).
-         error(function(data, status, headers, config) {
+  $scope.getCountry = function (){
+	  var url = checkmobiUrl + 'countries';
+	  
+	   
+	  $http.get(url).success(function(data) {
+		  
+		alert(data[1].name);
+	  
+	  }).error(function(data) {
            $scope.hide();
            var alertPopup = $ionicPopup.alert({
                title: 'Verificação do Smartphone',
                template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
          });
+  }
+  
+    $scope.checkNumberBySms = function (){
+		
+		
+		var req = { method: 'POST',
+                      url : checkmobiUrl + 'validation/request',
+				   headers: {
+					        'Content-Type' : 'application/json',
+						    'Authorization' : checkmobiKey
+				          },
+				 data : {   number : '+55' + window.localStorage['cellphoneNumber'],
+				            type : 'sms' }
+				};
+				
+				
+	 $http(req).then(function(response){
+		   if( response.status == 200){
+			  window.localStorage['id_checkmobi']     = response.data.id;
+			  $state.go('app.validationCode');
+		   } else{
+			 var alertPopup = $ionicPopup.alert({
+                              title: 'Verificação do Smartphone',
+			 template: 'Número informado inválido:' + window.localStorage['cellphoneNumber']});
+		   }
+		}, 
+	   function(response){
+		   var alertPopup = $ionicPopup.alert({
+                     title: 'Verificação do Smartphone',
+		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
+	   });			
+	}
+  
+
+    $scope.checknumber = function (cellphoneNumber){
+	
+	if ((cellphoneNumber.length < 10) || (cellphoneNumber.length > 11)){
+		 var alertPopup = $ionicPopup.alert({
+                     title: 'Verificação do Smartphone',
+		 template: 'Numero de smartphone informado não é valido. Favor digitar novamente'});
+		 return;
+	}
+	
+    $scope.startTimer();
+	  
+	  var req = { method: 'POST',
+                 url : 	checkmobiUrl + 'validation/request',
+				 headers: {
+					       'Content-Type' : 'application/json',
+						   'Authorization' : checkmobiKey
+				          },
+				 data : {   number : '+55' + cellphoneNumber,
+				            type : 'reverse_cli' }
+				};
+				
+	   $http(req).then(function(response){
+		   if( response.status == 200){
+			  window.localStorage['cellphoneNumber']  = cellphoneNumber;
+			  window.localStorage['id_checkmobi']     = response.data.id;
+			  window.localStorage['prefix_checkmobi'] = response.data.cli_prefix;
+			  $state.go('app.validationCode');
+		   } else{
+			 var alertPopup = $ionicPopup.alert({
+                              title: 'Verificação do Smartphone',
+			 template: 'Número informado inválido:' + cellphoneNumber});
+		   }
+		}, 
+	   function(response){
+		   var alertPopup = $ionicPopup.alert({
+                     title: 'Verificação do Smartphone',
+		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
+	   });
+	
+  }
+  
+  $scope.validateCode = function(code) {
+	 if (code.length != 4) {
+		 var alertPopup = $ionicPopup.alert({
+                     title: 'Verificação do Smartphone',
+	     template: 'Código de validação informado não está no padrão solicitado!'});
+		 return;
+	 }
+	  
+     $scope.show('Validando Número... Por favor aguarde!');
+	 
+	 var req = { method: 'POST',
+                 url : 	checkmobiUrl + 'validation/verify',
+				 headers: {
+					       'Content-Type' : 'application/json',
+						   'Authorization' : checkmobiKey
+				          },
+				 data : {   id : window.localStorage['id_checkmobi'],
+				            pin : code }
+				};
+     
+	 $http(req).then(function(response){
+		   if( response.status == 200){
+			    var alertPopup = $ionicPopup.alert({
+				title: 'Verificação do Smartphone',
+			   template: 'Smartphone validado com sucesso!'});
+			   saveUser(window.localStorage['id_checkmobi']);
+			   
+		   } else {
+			   var alertPopup = $ionicPopup.alert({
+				   title: 'Verificação do Smartphone',
+			   template: 'Código de validação informado não está correto!'});
+			   
+		   }
+	 }, function(response){
+		 alert(response.status);
+		   var alertPopup = $ionicPopup.alert({
+                     title: 'Verificação do Smartphone',
+		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
+	   });
+				
+     $scope.hide();
  }
 
   $scope.recieveNewCall = function() {
-    $scope.show('Realizando Chamada...');
-    var mobile = '+55' +  window.localStorage['cellphoneNumber'] ;
-    var url = 'https://www.cognalys.com/api/v1/otp/?app_id=' + appID
-            + '&access_token=' + appToken
-            + '&mobile=' + mobile;
-
-    $http.get(url).
-    success(function(data, status, headers, config) {
-      $scope.hide();
-      if (data.status == 'failed'){
-         var alertPopup = $ionicPopup.alert({
-             title: 'Verificação do Smartphone',
-             template: 'Número informado inválido:' + data.mobile
-          });
-      } else {
-          window.localStorage['otp_start'] = data.otp_start;
-          window.localStorage['keymatch'] = data.keymatch;
-          $scope.doctorAppNumber = window.localStorage['otp_start'] + 'XXXXX';
-
-           var alertPopup = $ionicPopup.alert({
-             title: 'Verificação do Smartphone',
-             template: 'Foi realizada uma nova ligação para seu número!' + data.mobile
-          });
-      }
-    }).
-    error(function(data, status, headers, config) {
-      $scope.hide();
-      var alertPopup = $ionicPopup.alert({
-               title: 'Verificação do Smartphone',
-               template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
-    });        
-
+   $scope.checknumber(window.localStorage['cellphoneNumber']) ;
   }
   
   $scope.changeMyNumber = function() {
     $state.go('app.newUser'); 
   }
   
-  $scope.validateNumber = function(cellphoneNumber) {
-
-    $scope.show('Validando Informações...');
-
-    var mobile = '+55' + cellphoneNumber;
-    var url = 'https://www.cognalys.com/api/v1/otp/?app_id=' + appID
-            + '&access_token=' + appToken
-            + '&mobile=' + mobile;
-
-    $http.get(url).
-    success(function(data, status, headers, config) {
-      $scope.hide();
-      if (data.status == 'failed'){
-         var alertPopup = $ionicPopup.alert({
-             title: 'Verificação do Smartphone',
-             template: 'Número informado inválido:' + data.mobile
-          });
-      } else {
-          window.localStorage['cellphoneNumber'] =  cellphoneNumber;
-          window.localStorage['otp_start'] = data.otp_start;
-          window.localStorage['keymatch'] = data.keymatch;
-          $state.go('app.validationCode');
-      }
-    }).
-    error(function(data, status, headers, config) {
-      $scope.hide();
-      var alertPopup = $ionicPopup.alert({
-               title: 'Verificação do Smartphone',
-               template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
-    });
-
-  } //Validate Number
-
-
   function saveUser(userId){
       window.localStorage['verifiedNumber'] = 'yes';   
       var user = {'name': '',

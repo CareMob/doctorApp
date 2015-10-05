@@ -1,0 +1,31 @@
+url = 'https://www.cognalys.com/api/v1/otp/confirm/?app_id=' + appID
+         + '&access_token=' + appToken
+         + '&keymatch=' + window.localStorage['keymatch'] 
+         + '&otp=' + window.localStorage['otp_start'] + code;
+
+     $http.get(url).
+        success(function(data, status, headers, config) {
+          $scope.hide();
+         if (data.status == 'fajiled'){
+            var alertPopup = $ionicPopup.alert({
+               title: 'Verificação do Smartphone',
+               template: 'Codigo de validação informado está incorreto!' });   
+             } else{
+                saveUser(data.app_user_id);
+
+               /*
+               var alertPopup = $ionicPopup.alert({   title: 'Verificação do Smartphone',
+                                                     template: 'Smartphone verificado com sucesso!' });              
+               window.localStorage['verifiedNumber'] = 'yes';   
+               $state.go('app.profile'); 
+               window.location.reload();
+               */
+               
+            }
+         }).
+         error(function(data, status, headers, config) {
+           $scope.hide();
+           var alertPopup = $ionicPopup.alert({
+               title: 'Verificação do Smartphone',
+               template: 'Ocorreu algum erro na comunicação com o servidor. Tente novamente' });
+         });

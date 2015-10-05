@@ -5,6 +5,7 @@
      			<div class="card">
 	     			<div ng-repeat='scheduleTime in appointment.scheduleTime'>
 	     				<div class="item item-text-wrap">
+	     					<p>ID: {{$parent.$index + 1}}</p>
 						    <p>
 				     		<span>Espec: </span>
 				       	 	<span> {{appointment.speciality}} </span>
@@ -27,7 +28,7 @@
 					            		type="button" ng-click="avalueteDoctor(scheduleTime)">Avaliar Médico</button>
 					            <button class="button button-small button-assertive"  
 					            		ng-hide="setHidden('future', appointment.date)"
-				            			type="button" ng-click="cancelAppointment(scheduleTime)">Desmarcar Consulta</button>
+				            			type="button" ng-click="cancelAppointment($parent.$index, $index)">Desmarcar Consulta</button>
 			            	</div>
 						</div>			     		
 	            	</div>
