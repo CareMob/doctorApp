@@ -24,7 +24,7 @@ starterCtrls.service('appService', function($http, Doctappbknd) {
 
 })
 
-starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, $timeout, appService) {
+starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, $timeout, $ionicHistory, appService) {
   var $state = $injector.get('$state');
   var checkmobiUrl = 'https://api.checkmobi.com/v1/';
   var checkmobiKey = '979DEBE2-90E5-4A66-8B61-18140A07DA67';
@@ -165,6 +165,7 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 	 $http(req).then(function(response){
 		   if( response.status == 200){
 			  window.localStorage['id_checkmobi']     = response.data.id;
+			  $ionicHistory.nextViewOptions({ disableBack: true });
 			  $state.go('app.validationCode');
 		   } else{
 			 var alertPopup = $ionicPopup.alert({
@@ -173,6 +174,8 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 		   }
 		}, 
 	   function(response){
+		   $scope.stopTimer();
+		   $scope.hide();
 		   var alertPopup = $ionicPopup.alert({
                      title: 'Verificação do Smartphone',
 		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
@@ -206,6 +209,7 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 			  window.localStorage['cellphoneNumber']  = cellphoneNumber;
 			  window.localStorage['id_checkmobi']     = response.data.id;
 			  window.localStorage['prefix_checkmobi'] = response.data.cli_prefix;
+			  $ionicHistory.nextViewOptions({ disableBack: true });
 			  $state.go('app.validationCode');
 		   } else{
 			 var alertPopup = $ionicPopup.alert({
@@ -214,6 +218,8 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 		   }
 		}, 
 	   function(response){
+	       $scope.stopTimer();
+		   $scope.hide();
 		   var alertPopup = $ionicPopup.alert({
                      title: 'Verificação do Smartphone',
 		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
@@ -269,6 +275,7 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
   }
   
   $scope.changeMyNumber = function() {
+	$ionicHistory.nextViewOptions({ disableBack: true });
     $state.go('app.newUser'); 
   }
   
@@ -285,7 +292,8 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
           if(result.data){
               window.localStorage['userId'] = result.data._id;
               var alertPopup = $ionicPopup.alert({title: 'Verificação do Smartphone',
-                                               template: 'Smartphone verificado com sucesso!' });                          
+                                               template: 'Smartphone verificado com sucesso!' });     
+              $ionicHistory.nextViewOptions({ disableBack: true });											   
               $state.go('app.profile'); 
               window.location.reload();
           }else{
