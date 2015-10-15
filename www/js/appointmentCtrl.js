@@ -107,7 +107,7 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
 
 })
 //DoctorFactory
-appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, appointmentVO, ScheduleFactory, ScheduleService, LoadingService) {
+appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $ionicPopup, $state, $ionicHistory, appointmentVO, ScheduleFactory, ScheduleService, LoadingService) {
   
   $scope.appointmentVO = appointmentVO;  
   $scope.schdlFreeTime = ScheduleFactory.getList();
@@ -261,14 +261,6 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
        return false;      
     }
    
-    if (   (dataInicial.getMonth() != dataFinal.getMonth())
-      || (dataInicial.getFullYear() != dataFinal.getFullYear())) {
-      var alertPopup = $ionicPopup.alert({
-              title: 'Busca Médicos',
-              template: 'Período Inicial e Final deve estar contido dentro do mesmo mês!'  });   
-       return false; 
-    }
-    
     if ((today >= dataInicial)){
        var alertPopup = $ionicPopup.alert({
               title: 'Busca Médicos',
@@ -363,6 +355,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
                   alertPopup = $ionicPopup.alert({
                         title: 'Registro de Consulta',
                         template: 'Consulta agendada com sucesso.' });
+						$ionicHistory.nextViewOptions({ disableBack: true });
                         $state.go('app.schedules');
                   //Cav, altera pra pegar o retorno da mensagem "OK" e chamar e tela de 'Meus Horarios'
                 /*}else{

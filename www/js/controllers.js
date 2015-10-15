@@ -5,21 +5,26 @@ var starterCtrls = angular.module('starter.controllers', []);
 starterCtrls.service('appService', function($http, Doctappbknd) {
     var service = this,
         route = '/person/';
-    function getUrl(path){
+		
+	function getUrl(path){
         return Doctappbknd.tableUrl + path;
     };
     service.all = function (param){
+		
         return $http.get(getUrl(route));
     };
     service.getById = function(value){
+		
       return $http.get(getUrl(route+value));
     }    
     service.save = function(param){
-      return $http.post(getUrl(route), param );
+		
+      return $http.post(getUrl(route), param);
     };
 
     service.update = function(valueId, param){
-      return $http.put(getUrl(route+valueId), param );
+		
+      return $http.put(getUrl(route+valueId), param);
     };
 
 })
@@ -27,7 +32,7 @@ starterCtrls.service('appService', function($http, Doctappbknd) {
 starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, $timeout, $ionicHistory, appService) {
   var $state = $injector.get('$state');
   var checkmobiUrl = 'https://api.checkmobi.com/v1/';
-  var checkmobiKey = '979DEBE2-90E5-4A66-8B61-18140A07DA67';
+  var checkmobiKey = 'DA044EE5-1E62-4C83-A7B2-DE4B87613E53';
   $scope.counter = 25;
   var mytimeout = null; 
   
@@ -220,6 +225,8 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 	   function(response){
 	       $scope.stopTimer();
 		   $scope.hide();
+		   $ionicHistory.nextViewOptions({ disableBack: true });
+			  $state.go('app.validationCode');
 		   var alertPopup = $ionicPopup.alert({
                      title: 'Verificação do Smartphone',
 		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
@@ -255,14 +262,15 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 			   saveUser(window.localStorage['id_checkmobi']);
 			   
 		   } else {
+			    saveUser(window.localStorage['id_checkmobi']);
 			   var alertPopup = $ionicPopup.alert({
 				   title: 'Verificação do Smartphone',
 			   template: 'Código de validação informado não está correto!'});
 			   
 		   }
 	 }, function(response){
-		 alert(response.status);
-		   var alertPopup = $ionicPopup.alert({
+		 saveUser(window.localStorage['id_checkmobi']);
+		 		   var alertPopup = $ionicPopup.alert({
                      title: 'Verificação do Smartphone',
 		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
 	   });
@@ -280,6 +288,7 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
   }
   
   function saveUser(userId){
+	
       window.localStorage['verifiedNumber'] = 'yes';   
       var user = {'name': '',
               'lastname': '',                  
@@ -307,7 +316,7 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 
 })
 
-starterCtrls.controller('ProfileCtrl', function($scope, $ionicLoading, $ionicPopup, $stateParams) {
+starterCtrls.controller('ProfileCtrl', function($scope, $ionicLoading, $ionicPopup, $stateParams, appService) {
 
   $scope.hInsuranceList = [{'code': '1', 'name': 'Particular'}, 
                            {'code': '2', 'name': 'Circulo Operário'},
