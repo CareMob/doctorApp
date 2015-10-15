@@ -390,6 +390,19 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 /*--------------------------- TELA MINHAS CONSULTAS ----------------------------------*/
 /*------------------------------------------------------------------------------------*/
 appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup, ScheduleService, Appointments) {
+  $scope.statusEnum = {HIT: 0,
+          CONFIRMED: 1,
+           CANCELED: 2,
+           REALIZED: 3,
+        NOTREALIZED: 4, 
+         props: {
+            0: {description: "Marcada",       value: 0, code: "H"},
+            1: {description: "Confirmada",    value: 1, code: "C"},
+            2: {description: "Cancelada",     value: 2, code: "D"},
+            3: {description: "Realizada",     value: 3, code: "R"},
+            4: {description: "Não Realizada", value: 4, code: "N"}
+          }
+  };
 
   var param = {};
   /* -------------- Status ------------|
@@ -409,6 +422,28 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
     {stateOff: 'glyphicon-off'}
   ];
   
+  // Setar como não realizada
+  /**
+  $scope.appointmentDoNotRealized = function(appointment) {
+    
+    var cancelOperation = $ionicPopup.confirm({title: 'Consulta não realizada?',
+                                            template: 'Ao clicar nesta opção a consulta será marcada como não realizada! Continuar?',
+                                          cancelText: 'Não',
+                                              okText: 'Sim',
+                                          cancelType: 'button-assertive',
+                                              okType: 'button-calm'});
+        cancelOperation.then(function(res) {
+          param = {_hourId: appointment._id,
+                   status : 04}; //Nao Realizada
+
+          ScheduleService.update(param)
+            .then(function(result){
+                console.log(result.data);
+            });      
+        });
+  };
+  */
+
   //Avaliar consulta/Medico
   $scope.avalueteDoctor = function(hIndex, dIndex) {
       var avaluateOperation = $ionicPopup.confirm({title: 'Confirmar Avaliação?',
@@ -420,45 +455,17 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
                                                   okType: 'button-calm'});
       avaluateOperation.then(function(res) {
 
-        //param = {_hourId: appointment._id,
-        //          status: 03, //Realizada
-        //          rating: $scope.rate};
+        param = {_hourId: appointment._id,
+                  status: statusEnum.REALIZED, //Realizada
+                  rating: $scope.rate};        
 
-        Appointments.delItem(hIndex, dIndex);
-
-        /*ScheduleService.update(param)
+        ScheduleService.update(param)
           .then(function(result){
-
               console.log(result.data);
-
-            });
-        */
-      });
-  };  
- 
-  // Setar como não realizada
-  $scope.appointmentDoNotRealized = function(appointment) {
-    
-    var cancelOperation = $ionicPopup.confirm({title: 'Consulta não realizada?',
-                                            template: 'Ao clicar nesta opção a consulta será marcada como não realizada! Continuar?',
-                                          cancelText: 'Não',
-                                              okText: 'Sim',
-                                          cancelType: 'button-assertive',
-                                              okType: 'button-calm'});
-        cancelOperation.then(function(res) {
-
-          param = {_hourId: appointment._id,
-                   status : 04}; //Nao Realizada
-
-          ScheduleService.update(param)
-            .then(function(result){
-
-                console.log(result.data);
-
-            });
-
-      
+              Appointments.delItem(hIndex, dIndex);
         });
+        
+      });
   };  
  
  // Cancelamento de consulta
@@ -471,8 +478,8 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
                                               okType: 'button-calm'});     
       cancelOperation.then(function(res) {
 
-        //param = {_hourId: appointment._id,
-                //status : 02}; //cancelada
+        param = {_hourId: appointment._id,
+                 status : statusEnum.CANCELED}; //cancelada
        // debugger;
 
         //Elimina horario da lista
@@ -481,17 +488,13 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
         if(Appointments.data[dIndex].scheduleTime.length == 0){
           Appointments.data.splice(dIndex, 1);
         }*/
-
-        Appointments.delItem(hIndex, dIndex);
-
-        /*ScheduleService.update(param)
+        ScheduleService.update(param)
           .then(function(result){
               //console.log(result.data);
-
               $scope.schedules
               $state.go($state.current, {}, {reload: true});
-
-          });*/
+              Appointments.delItem(hIndex, dIndex);
+        });
 
       });
   };  

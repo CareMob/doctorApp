@@ -1,5 +1,10 @@
 <ion-view view-title="Histórico" ng-init="getHistory()">
   <ion-content>  		
+  		<ion-refresher
+    		pulling-text="Puxe para atualizar..."
+    		on-refresh="getHistory()"
+    		spinner>
+  		</ion-refresher>
   		<ion-item ng-repeat="appointment in history">
      			<div class="card">
 	     			<div ng-repeat='scheduleTime in appointment.scheduleTime'>

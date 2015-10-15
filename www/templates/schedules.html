@@ -1,5 +1,10 @@
 <ion-view view-title="Meus Horários" ng-init="getAppointments()">
 	<ion-content>
+		<ion-refresher
+    		pulling-text="Puxe para atualizar..."
+    		on-refresh="getAppointments()"
+    		spinner>
+  		</ion-refresher>
     	<ion-list>
      		<ion-item ng-repeat="appointment in schedules">
      			<div class="card">

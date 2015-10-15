@@ -32,9 +32,9 @@ starterCtrls.service('appService', function($http, Doctappbknd) {
 starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injector, $ionicLoading, $timeout, $ionicHistory, appService) {
   var $state = $injector.get('$state');
   var checkmobiUrl = 'https://api.checkmobi.com/v1/';
-  var checkmobiKey = 'DA044EE5-1E62-4C83-A7B2-DE4B87613E53';
+  var checkmobiKey = 'DA044EE5-1E62-4C83-A7B2-DE4B87613E53';                      
   $scope.counter = 25;
-  var mytimeout = null; 
+  var mytimeout  = null; 
   
   $scope.onTimeout = function() {
 	  if($scope.counter == 0) {
@@ -157,14 +157,14 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 		
 		
 		var req = { method: 'POST',
-                      url : checkmobiUrl + 'validation/request',
-				   headers: {
-					        'Content-Type' : 'application/json',
-						    'Authorization' : checkmobiKey
+                  url : checkmobiUrl + 'validation/request',
+				       headers: {
+					        'Content-Type'  : 'application/json',
+						      'Authorization' : checkmobiKey
 				          },
-				 data : {   number : '+55' + window.localStorage['cellphoneNumber'],
-				            type : 'sms' }
-				};
+				         data : {number : '+55' + window.localStorage['cellphoneNumber'],
+				                   type : 'sms'}
+				      };
 				
 				
 	 $http(req).then(function(response){
@@ -188,14 +188,14 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 	}
   
 
-    $scope.checknumber = function (cellphoneNumber){
+  $scope.checknumber = function (cellphoneNumber){
 	
-	if ((cellphoneNumber.length < 10) || (cellphoneNumber.length > 11)){
-		 var alertPopup = $ionicPopup.alert({
-                     title: 'Verificação do Smartphone',
-		 template: 'Numero de smartphone informado não é valido. Favor digitar novamente'});
-		 return;
-	}
+  	if ((cellphoneNumber.length < 10) || (cellphoneNumber.length > 11)){
+  		 var alertPopup = $ionicPopup.alert({
+                       title: 'Verificação do Smartphone',
+  		 template: 'Numero de smartphone informado não é valido. Favor digitar novamente'});
+  		 return;
+  	}
 	
     $scope.startTimer();
 	  
@@ -254,28 +254,26 @@ starterCtrls.controller('AppCtrl', function($scope, $ionicPopup, $http, $injecto
 				            pin : code }
 				};
      
-	 $http(req).then(function(response){
-		   if( response.status == 200){
+	$http(req).then(function(response){
+		  if(response.status == 200){
 			    var alertPopup = $ionicPopup.alert({
-				title: 'Verificação do Smartphone',
-			   template: 'Smartphone validado com sucesso!'});
-			   saveUser(window.localStorage['id_checkmobi']);
-			   
-		   } else {
-			    saveUser(window.localStorage['id_checkmobi']);
-			   var alertPopup = $ionicPopup.alert({
-				   title: 'Verificação do Smartphone',
-			   template: 'Código de validação informado não está correto!'});
-			   
-		   }
-	 }, function(response){
-		 saveUser(window.localStorage['id_checkmobi']);
-		 		   var alertPopup = $ionicPopup.alert({
-                     title: 'Verificação do Smartphone',
-		   template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
-	   });
+				                title: 'Verificação do Smartphone',
+			               template: 'Smartphone validado com sucesso!'});
+		      saveUser(window.localStorage['id_checkmobi']);			   
+		  }else {
+			    saveUser(window.localStorage['id_checkmobi']); //Remover
+		      var alertPopup = $ionicPopup.alert({
+           	            title: 'Verificação do Smartphone',
+			               template: 'Código de validação informado não está correto!'});			   
+		  }
+	},function(response){
+    saveUser(window.localStorage['id_checkmobi']); //Remover
+		var alertPopup = $ionicPopup.alert({
+                    title: 'Verificação do Smartphone',
+		             template: 'Ocorreu algum problema de comunicação com o servidor! Certifique-se que está com acesso a internet e tente novamente!'});
+  });
 				
-     $scope.hide();
+    $scope.hide();
  }
 
   $scope.recieveNewCall = function() {
