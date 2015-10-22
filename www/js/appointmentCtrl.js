@@ -101,6 +101,14 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
       template: 'Buscando Informações...'
     });
   };
+
+  service.refresh = function() {
+    $ionicLoading.show({
+      //template: '<img src="/img/symbol-loader64.gif"/>' 
+      template: 'Atualizando dados'
+    });
+  };
+
   service.hide = function(){
     $ionicLoading.hide();
   };
@@ -389,7 +397,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 /*------------------------------------------------------------------------------------*/
 /*--------------------------- TELA MINHAS CONSULTAS ----------------------------------*/
 /*------------------------------------------------------------------------------------*/
-appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup, ScheduleService, Appointments) {
+appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup, ScheduleService, Appointments,LoadingService) {
   $scope.statusEnum = {HIT: 0,
           CONFIRMED: 1,
            CANCELED: 2,
@@ -445,7 +453,7 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
   */
 
   //Avaliar consulta/Medico
-  $scope.avalueteDoctor = function(hIndex, dIndex) {
+  $scope.avalueteDoctor = function(hIndex, dIndex, appointment) {
       var avaluateOperation = $ionicPopup.confirm({title: 'Confirmar Avaliação?',
                                                 subTitle: 'Atribua a quantiade de estrelas ao médico conforme o atendimento recebido:',
                                                 template: '<h1><rating ng-model="rate" max="5" readonly="false" on-hover="null" on-leave="overStar = null"></h1>', 
@@ -453,23 +461,22 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
                                                   okText: 'Sim',
                                               cancelType: 'button-assertive',
                                                   okType: 'button-calm'});
-      avaluateOperation.then(function(res) {
-
+      avaluateOperation.then(function(res) {        
+        LoadingService.refresh();
         param = {_hourId: appointment._id,
-                  status: statusEnum.REALIZED, //Realizada
-                  rating: $scope.rate};        
-
+                  status: $scope.statusEnum.REALIZED, //Realizada
+                  rating: $scope.rate};                
         ScheduleService.update(param)
-          .then(function(result){
-              console.log(result.data);
+          .then(function(result){              
               Appointments.delItem(hIndex, dIndex);
+              LoadingService.hide();
         });
         
       });
   };  
  
  // Cancelamento de consulta
-  $scope.cancelAppointment = function(hIndex, dIndex) {
+  $scope.cancelAppointment = function(hIndex, dIndex, appointment) {
     var cancelOperation = $ionicPopup.confirm({title: 'Cancelar consulta?',
                                             template: 'Ao clicar nesta opção a consulta será cancelada, liberando o horário na agenda do médico para outro paciente! Confirmar Cancelamento?', 
                                           cancelText: 'Não',
@@ -478,8 +485,9 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
                                               okType: 'button-calm'});     
       cancelOperation.then(function(res) {
 
+        LoadingService.refresh();
         param = {_hourId: appointment._id,
-                 status : statusEnum.CANCELED}; //cancelada
+                 status : $scope.statusEnum.CANCELED}; //cancelada
        // debugger;
 
         //Elimina horario da lista
@@ -490,10 +498,9 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
         }*/
         ScheduleService.update(param)
           .then(function(result){
-              //console.log(result.data);
-              $scope.schedules
               $state.go($state.current, {}, {reload: true});
               Appointments.delItem(hIndex, dIndex);
+              LoadingService.hide();
         });
 
       });
@@ -529,6 +536,9 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
             alertPopup = $ionicPopup.alert({title: 'Informações',
                                          template: 'Você não nenhuma consulta agendada.'  });
           }          
+      }).finally(function() {
+       // Stop the ion-refresher from spinning
+       $scope.$broadcast('scroll.refreshComplete');
       });      
    }   
 
@@ -594,6 +604,9 @@ starterCtrls.controller('hisotryCtrl', function($scope, $ionicPopup, ScheduleSer
             alertPopup = $ionicPopup.alert({title: 'Informações',
                                          template: 'Você não nenhuma consultas em histórico.'  });
           }          
+      }).finally(function() {
+       // Stop the ion-refresher from spinning
+       $scope.$broadcast('scroll.refreshComplete');
       });      
    }
 

@@ -1,5 +1,8 @@
-<ion-view view-title="Meus Horários" ng-init="getAppointments()">
+<ion-view view-title="Meus Horários" ng-init="getAppointments()">	
 	<ion-content>
+		<div class='background:red'>
+
+		</div>
 		<ion-refresher
     		pulling-text="Puxe para atualizar..."
     		on-refresh="getAppointments()"
@@ -30,7 +33,7 @@
 										type="button" ng-click="appointmentDoNotRealized(scheduleTime)">Consulta nao realizada</button-->
 					            <button class="button button-small button-calm" 
 					            		ng-hide="setHidden('past', appointment.date)"
-					            		type="button" ng-click="avalueteDoctor(scheduleTime)">Avaliar Médico</button>
+					            		type="button" ng-click="avalueteDoctor($parent.$index, $index,scheduleTime)">Avaliar Médico</button>
 					            <button class="button button-small button-assertive"  
 					            		ng-hide="setHidden('future', appointment.date)"
 				            			type="button" ng-click="cancelAppointment($parent.$index, $index)">Desmarcar Consulta</button>
@@ -40,9 +43,6 @@
             	</div>
       		</ion-item>
     	</ion-list>
-    	<div class="bar bar-footer">     
-      		<button class="button button-block button-stable" ng-click="getAppointments()">Atualizar</button>
-    	</div>
    	</ion-content>
 </ion-view>
 
