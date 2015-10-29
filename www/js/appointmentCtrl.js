@@ -1,4 +1,4 @@
-var appointmentCtrl = angular.module('AppointmentCtrl', []);
+var appointmentCtrl = angular.module('AppointmentCtrl', ['ionic-toast']);
 //var appointmentCtrl = angular.module('AppointmentCtrl', ['doctorsCtrl']);
 appointmentCtrl.factory('appointmentVO', function(){
   var appointmentVO            = {};  
@@ -91,7 +91,7 @@ appointmentCtrl.service('ScheduleService', function($http, Doctappbknd) {
     
 })
 
-appointmentCtrl.service('LoadingService', function($ionicLoading){
+appointmentCtrl.service('LoadingService', function($ionicLoading, ionicToast){
   var service = this;
 
   //Loading
@@ -112,6 +112,12 @@ appointmentCtrl.service('LoadingService', function($ionicLoading){
   service.hide = function(){
     $ionicLoading.hide();
   };
+
+  service.toast = function(msg, duration, position){
+    // ionicToast.show(message, position, stick, time); -->
+    ionicToast.show(msg, 'top', false, 1500);           
+  }
+
 
 })
 //DoctorFactory
@@ -396,7 +402,7 @@ appointmentCtrl.controller('newAppointmentCtrl', function($scope, $ionicModal, $
 })
 /*------------------------------------------------------------------------------------*/
 /*--------------------------- TELA MINHAS CONSULTAS ----------------------------------*/
-/*------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------ */
 appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup, ScheduleService, Appointments,LoadingService) {
   $scope.statusEnum = {HIT: 0,
           CONFIRMED: 1,
@@ -487,18 +493,11 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
 
         LoadingService.refresh();
         param = {_hourId: appointment._id,
-                 status : $scope.statusEnum.CANCELED}; //cancelada
-       // debugger;
-
-        //Elimina horario da lista
-        /*Appointments.data[dIndex].scheduleTime.splice(hIndex,1);
-        //Verifica se existe algum horario para o dia, caso não elimina o dia da lista tbm.
-        if(Appointments.data[dIndex].scheduleTime.length == 0){
-          Appointments.data.splice(dIndex, 1);
-        }*/
+                 status : $scope.statusEnum.CANCELED}; //cancelada     
+       // debugger;                 
         ScheduleService.update(param)
           .then(function(result){
-              $state.go($state.current, {}, {reload: true});
+              //$state.go($state.current, {}, {reload: true});
               Appointments.delItem(hIndex, dIndex);
               LoadingService.hide();
         });
@@ -539,12 +538,14 @@ appointmentCtrl.controller('SchedulesCtrl', function($scope, $state, $ionicPopup
       }).finally(function() {
        // Stop the ion-refresher from spinning
        $scope.$broadcast('scroll.refreshComplete');
+        //@aki
+        LoadingService.toast("Lista de consultas atualizada", 'short');
       });      
    }   
 
 })
 
-starterCtrls.controller('hisotryCtrl', function($scope, $ionicPopup, ScheduleService){
+starterCtrls.controller('hisotryCtrl', function($scope, $ionicPopup, ScheduleService, LoadingService){
 
   $scope.statusEnum = {HIT: 0,
           CONFIRMED: 1,
@@ -607,6 +608,7 @@ starterCtrls.controller('hisotryCtrl', function($scope, $ionicPopup, ScheduleSer
       }).finally(function() {
        // Stop the ion-refresher from spinning
        $scope.$broadcast('scroll.refreshComplete');
+	   LoadingService.toast("Lista de consultas atualizada", 'short');	
       });      
    }
 
