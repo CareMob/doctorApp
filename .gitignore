@@ -1,1 +1,4 @@
+/plugins/*
+www/lib/*
 ionic.project
+www/lib/ionic/css/ionic.css

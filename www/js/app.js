@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'ionic.rating'])
+angular.module('starter', ['ionic', 'starter.controllers','doctorsCtrl', 'AppointmentCtrl', 'ionic.rating', 'ionic-toast'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

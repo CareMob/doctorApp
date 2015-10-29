@@ -1,22 +1,20 @@
 <ion-view view-title="Meus Horários" ng-init="getAppointments()">	
 	<ion-content>
-		<div class='background:red'>
-
-		</div>
 		<ion-refresher
     		pulling-text="Puxe para atualizar..."
     		on-refresh="getAppointments()"
     		spinner>
   		</ion-refresher>
     	<ion-list>
-     		<ion-item ng-repeat="appointment in schedules">
-     			<div class="card">
-	     			<div ng-repeat='scheduleTime in appointment.scheduleTime'>
+     		<ion-item ng-repeat="appointment in schedules">     		
+     			
+	     		<div ng-repeat='scheduleTime in appointment.scheduleTime'>
+	     			<div class="card">
 	     				<div class="item item-text-wrap">
-	     					<p>ID: {{$parent.$index + 1}}</p>
+	     					<p>ID: {{$parent.$index + $index}}</p>
 						    <p>
-				     		<span>Especialidade: </span>
-				       	 	<span> {{appointment.speciality}} </span>
+				     			<span>Especialidade: </span>
+				       	 		<span> {{appointment.speciality}} </span>
 							</p>
 							<p>
 					     		<span>Médico: </span>
@@ -28,15 +26,12 @@
 						</div>
 						<div class="item item-divider">
 						    <div class="button-bar">
-								<!--button class="button button-small button-assertive" 
-										ng-hide="setHidden('past', appointment.date)" 
-										type="button" ng-click="appointmentDoNotRealized(scheduleTime)">Consulta nao realizada</button-->
 					            <button class="button button-small button-calm" 
 					            		ng-hide="setHidden('past', appointment.date)"
-					            		type="button" ng-click="avalueteDoctor($parent.$index, $index,scheduleTime)">Avaliar Médico</button>
+					            		type="button" ng-click="avalueteDoctor($index, $parent.$index, scheduleTime)">Avaliar Médico</button>
 					            <button class="button button-small button-assertive"  
 					            		ng-hide="setHidden('future', appointment.date)"
-				            			type="button" ng-click="cancelAppointment($parent.$index, $index)">Desmarcar Consulta</button>
+				            			type="button" ng-click="cancelAppointment($index, $parent.$index, scheduleTime)">Desmarcar Consulta</button>
 			            	</div>
 						</div>			     		
 	            	</div>
