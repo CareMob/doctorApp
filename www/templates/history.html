@@ -5,9 +5,9 @@
     		on-refresh="getHistory()"
     		spinner>
   		</ion-refresher>
-  		<ion-item ng-repeat="appointment in history">
-     			<div class="card">
-	     			<div ng-repeat='scheduleTime in appointment.scheduleTime'>
+  		<ion-item ng-repeat="appointment in history">     			
+	     		<div ng-repeat='scheduleTime in appointment.scheduleTime'>
+	     			<div class="card">
 	     				<div class="item item-text-wrap">
 						    <p>
 				     		<span>Especialidade: </span>

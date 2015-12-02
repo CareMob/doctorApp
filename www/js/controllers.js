@@ -325,7 +325,7 @@ starterCtrls.controller('ProfileCtrl', function($scope, $ionicLoading, $ionicPop
   $scope.user = {  '_id': window.localStorage['userId'],
                   'name': window.localStorage['name'],
               'lastname': window.localStorage['lastname'],    
-          'healthCareId': window.localStorage['healthCareId'],
+          'healthCareId': window.localStorage['healthCareId'] ,
        'healthInsurance': window.localStorage['healthInsurance'],
               //'birthday': window.localStorage['birthday'],
                 'userId': window.localStorage['cellphoneNumber']};   
@@ -337,7 +337,7 @@ starterCtrls.controller('ProfileCtrl', function($scope, $ionicLoading, $ionicPop
     window.localStorage['name']            = $scope.user.name;
     window.localStorage['lastname']        = $scope.user.lastname;
     window.localStorage['birthday']        = $scope.user.birthday;
-    window.localStorage['healthCareId']    = $scope.user.healthCareId;
+    window.localStorage['healthCareId']    = $scope.user.healthCareId ==! "" ? $scope.user.healthCareId : "";
     window.localStorage['healthInsurance'] = $scope.user.healthInsurance;
 
     $scope.hide();
@@ -364,10 +364,6 @@ starterCtrls.controller('ProfileCtrl', function($scope, $ionicLoading, $ionicPop
   $scope.hide = function(){
     $ionicLoading.hide();
   };
-
-
-
-
 
 })
 

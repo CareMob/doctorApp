@@ -11,8 +11,16 @@ doctorsCtrl.service('DoctorService', function($http, Doctappbknd) {
     }
 
     service.all = function (path) {
-        return $http.get(getUrl(path));        
-        //return $http.get('http://localhost:8080/api/doctors');
+        //return $http.get(getUrl(path));        
+        var req = { method: 'GET',
+                      url : getUrl(path),
+                   headers: {'Content-Type'  : 'application/json'},
+                     data : {token: 'teste'}
+
+                   };   
+                      //,'x-access-token' : 'MenegatTeste'            
+                
+     return $http(req);        
     };
 
     /*
